@@ -10,6 +10,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
+	import SiteSearch from './SiteSearch.svelte';
 </script>
 
 <header class="navbar">
@@ -32,7 +33,7 @@
 				href="https://github.com/apache/asyncband"
 				aria-label="GitHub repository"
 			></a>
-			<a class="api-search" href="https://docs.rs/asyncband/">API documentation</a>
+			<SiteSearch />
 			<details class="asf-menu">
 				<summary>ASF</summary>
 				<div>

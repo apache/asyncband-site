@@ -51,12 +51,6 @@
 				>
 				<p class="sidebar-heading">Reference</p>
 				<a class="sidebar-item external" href="https://docs.rs/asyncband/">API documentation</a>
-				<a
-					class="sidebar-item external"
-					href="https://github.com/apache/asyncband/blob/main/MIGRATE.md"
-				>
-					Migration guide
-				</a>
 			</nav>
 		{:else}
 			<nav aria-label="Community sidebar">

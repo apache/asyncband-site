@@ -42,7 +42,6 @@
 			<li><a href="#installation">Installation</a></li>
 			<li><a href="#getting-started">Getting Started</a></li>
 			<li><a href="#available-apis">Available APIs</a></li>
-			<li><a href="#name-history">Name History</a></li>
 		</ul>
 	{/snippet}
 
@@ -116,12 +115,4 @@
 			</tbody>
 		</table>
 	</div>
-
-	<h2 id="name-history">Name History</h2>
-	<p>
-		Asyncband was formerly published as MEA. The <code>mea</code> crate is deprecated and receives
-		no further development. See the
-		<a href="https://github.com/apache/asyncband/blob/main/MIGRATE.md">migration guide</a>
-		for migration instructions.
-	</p>
 </DocsShell>
