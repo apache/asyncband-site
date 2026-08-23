@@ -7,10 +7,6 @@
  the License at https://www.apache.org/licenses/LICENSE-2.0.
 -->
 
-<script lang="ts">
-	import DocsShell from '$lib/components/DocsShell.svelte';
-</script>
-
 <svelte:head>
 	<title>Downloads | Apache Asyncband</title>
 	<meta name="description" content="Apache Asyncband release downloads." />
@@ -19,7 +15,9 @@
 	<meta property="og:title" content="Downloads | Apache Asyncband" />
 </svelte:head>
 
-<DocsShell label="Downloads">
-	<h1>Downloads</h1>
-	<p>Release downloads will be listed here after the first Apache Asyncband release.</p>
-</DocsShell>
+<main id="main-content" class="standalone-page">
+	<article class="standalone-article" data-pagefind-body>
+		<h1>Downloads</h1>
+		<p>Release downloads will be listed here after the first Apache Asyncband release.</p>
+	</article>
+</main>

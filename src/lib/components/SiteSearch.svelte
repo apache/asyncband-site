@@ -9,150 +9,121 @@
 
 <script lang="ts">
 	import { tick } from 'svelte';
-	import { resolve } from '$app/paths';
 
-	type SearchEntry = {
+	type PagefindSubResult = {
 		title: string;
-		page: string;
-		href: string;
-		keywords: string;
-		featured: boolean;
+		url: string;
+		plain_excerpt?: string;
 	};
 
-	const searchEntries = [
-		{
-			title: 'About Apache Asyncband',
-			page: 'Documentation',
-			href: '/docs/about/',
-			keywords: 'runtime agnostic synchronization coordination asynchronous Rust',
-			featured: true
-		},
-		{
-			title: 'Installation',
-			page: 'About',
-			href: '/docs/about/#installation',
-			keywords: 'cargo add dependency features',
-			featured: false
-		},
-		{
-			title: 'Getting Started',
-			page: 'Documentation',
-			href: '/docs/getting-started/',
-			keywords: 'install mutex example cargo features',
-			featured: true
-		},
-		{
-			title: 'Available APIs',
-			page: 'Documentation',
-			href: '/docs/primitives/',
-			keywords:
-				'mutex rwlock condvar once oncecell oncemap barrier latch waitgroup shutdown oneshot mpsc pool semaphore singleflight',
-			featured: true
-		},
-		{
-			title: 'Shared state',
-			page: 'Primitives',
-			href: '/docs/primitives/#shared-state',
-			keywords: 'mutex rwlock condvar locks',
-			featured: false
-		},
-		{
-			title: 'One-time initialization',
-			page: 'Primitives',
-			href: '/docs/primitives/#initialization',
-			keywords: 'once oncecell oncemap initialize',
-			featured: false
-		},
-		{
-			title: 'Task coordination',
-			page: 'Primitives',
-			href: '/docs/primitives/#task-coordination',
-			keywords: 'barrier latch waitgroup shutdown tasks',
-			featured: false
-		},
-		{
-			title: 'Channels',
-			page: 'Primitives',
-			href: '/docs/primitives/#channels',
-			keywords: 'oneshot mpsc bounded unbounded send values',
-			featured: false
-		},
-		{
-			title: 'Resource reuse',
-			page: 'Primitives',
-			href: '/docs/primitives/#resource-reuse',
-			keywords: 'pool bounded unbounded managed objects',
-			featured: false
-		},
-		{
-			title: 'Workload control',
-			page: 'Primitives',
-			href: '/docs/primitives/#workload-control',
-			keywords: 'semaphore singleflight group permits concurrency',
-			featured: false
-		},
-		{
-			title: 'Runtime and Blocking',
-			page: 'Documentation',
-			href: '/docs/runtime/',
-			keywords: 'executor runtime agnostic synchronous blocking future',
-			featured: true
-		},
-		{
-			title: 'Synchronous interoperability',
-			page: 'Runtime and Blocking',
-			href: '/docs/runtime/#synchronous-interoperability',
-			keywords: 'blocking block_on wait_timeout sync future',
-			featured: false
-		},
-		{
-			title: 'Execution constraints',
-			page: 'Runtime and Blocking',
-			href: '/docs/runtime/#execution-constraints',
-			keywords: 'timer io driver starvation deadlock timeout',
-			featured: false
-		},
-		{
-			title: 'Thread safety',
-			page: 'Runtime and Blocking',
-			href: '/docs/runtime/#thread-safety',
-			keywords: 'send sync guards values bounds',
-			featured: false
-		},
-		{
-			title: 'Minimum supported Rust version',
-			page: 'Runtime and Blocking',
-			href: '/docs/runtime/#msrv',
-			keywords: 'msrv rustc 1.86',
-			featured: false
-		},
-		{
-			title: 'Downloads',
-			page: 'Releases',
-			href: '/downloads/',
-			keywords: 'release source archive signature checksum',
-			featured: true
-		}
-	] as const satisfies readonly SearchEntry[];
+	type PagefindResultData = {
+		url: string;
+		plain_excerpt?: string;
+		meta: { title?: string };
+		sub_results?: PagefindSubResult[];
+	};
+
+	type PagefindApi = {
+		init(): Promise<void>;
+		debouncedSearch(
+			term: string,
+			options?: Record<string, unknown>,
+			debounceTimeout?: number
+		): Promise<{
+			results: Array<{ data(): Promise<PagefindResultData> }>;
+		} | null>;
+	};
+
+	type DisplayResult = {
+		title: string;
+		url: string;
+		excerpt: string;
+	};
 
 	let dialog: HTMLDialogElement;
 	let input: HTMLInputElement;
 	let query = $state('');
+	let results = $state<DisplayResult[]>([]);
+	let loading = $state(false);
+	let searchError = $state('');
+	let searchVersion = 0;
+	let pagefindPromise: Promise<PagefindApi> | undefined;
 
-	const results = $derived.by(() => {
-		const normalizedQuery = query.trim().toLowerCase();
+	$effect(() => {
+		const term = query.trim();
+		const version = ++searchVersion;
 
-		if (!normalizedQuery) {
-			return searchEntries.filter((entry) => entry.featured);
+		if (term.length < 2) {
+			results = [];
+			loading = false;
+			searchError = '';
+			return;
 		}
 
-		return searchEntries
-			.filter((entry) => `${entry.title} ${entry.keywords}`.toLowerCase().includes(normalizedQuery))
-			.slice(0, 8);
+		loading = true;
+		searchError = '';
+		void runSearch(term, version);
 	});
+
+	function loadPagefind() {
+		if (!pagefindPromise) {
+			const pagefindPath = '/pagefind/pagefind.js';
+			pagefindPromise = import(/* @vite-ignore */ pagefindPath)
+				.then(async (module) => {
+					const pagefind = module as PagefindApi;
+					await pagefind.init();
+					return pagefind;
+				})
+				.catch((error: unknown) => {
+					pagefindPromise = undefined;
+					throw error;
+				});
+		}
+
+		return pagefindPromise;
+	}
+
+	async function runSearch(term: string, version: number) {
+		try {
+			const pagefind = await loadPagefind();
+			const search = await pagefind.debouncedSearch(term);
+			if (!search || version !== searchVersion) return;
+
+			const pages = await Promise.all(search.results.slice(0, 6).map((result) => result.data()));
+			if (version !== searchVersion) return;
+
+			const matches = pages.flatMap((page) => {
+				const pageTitle = page.meta.title ?? 'Untitled page';
+				const subResults = page.sub_results?.length
+					? page.sub_results
+					: [
+							{
+								title: pageTitle,
+								url: page.url,
+								plain_excerpt: page.plain_excerpt
+							}
+						];
+
+				return subResults.slice(0, 3).map((result) => ({
+					title: result.title || pageTitle,
+					url: result.url,
+					excerpt: result.plain_excerpt ?? ''
+				}));
+			});
+
+			results = [...new Map(matches.map((result) => [result.url, result])).values()].slice(0, 8);
+		} catch {
+			if (version !== searchVersion) return;
+			results = [];
+			searchError = 'Search is available in the production preview after running npm run build.';
+		} finally {
+			if (version === searchVersion) loading = false;
+		}
+	}
 
 	async function openSearch() {
 		dialog.showModal();
+		void loadPagefind().catch(() => undefined);
 		await tick();
 		input.focus();
 	}
@@ -195,16 +166,31 @@
 	</div>
 
 	<div class="search-results" aria-live="polite">
-		<p>{query.trim() ? `${results.length} results` : 'Browse documentation'}</p>
-		{#if results.length > 0}
-			{#each results as result (result.href)}
-				<a href={resolve(result.href)} onclick={closeSearch}>
-					<strong>{result.title}</strong>
-					<span>{result.page}</span>
+		<p>
+			{loading
+				? 'Searching…'
+				: query.trim().length < 2
+					? 'Search the site'
+					: `${results.length} results`}
+		</p>
+		{#if searchError}
+			<div class="search-empty">{searchError}</div>
+		{:else if results.length > 0}
+			{#each results as result (result.url)}
+				<!-- Pagefind only returns URLs generated from local static pages. -->
+				<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+				<a href={result.url} onclick={closeSearch}>
+					<span class="search-result-main">
+						<strong>{result.title}</strong>
+						{#if result.excerpt}<small>{result.excerpt}</small>{/if}
+					</span>
+					<span class="search-result-path">{result.url}</span>
 				</a>
 			{/each}
-		{:else}
+		{:else if query.trim().length >= 2 && !loading}
 			<div class="search-empty">No documentation matched “{query.trim()}”.</div>
+		{:else}
+			<div class="search-empty">Type at least two characters to search.</div>
 		{/if}
 	</div>
 </dialog>

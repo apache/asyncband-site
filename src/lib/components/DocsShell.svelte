@@ -46,11 +46,6 @@
 				class:active={page.url.pathname === resolve('/docs/runtime/')}
 				href={resolve('/docs/runtime/')}>Runtime and Blocking</a
 			>
-			<a
-				class="sidebar-item"
-				class:active={page.url.pathname === resolve('/downloads/')}
-				href={resolve('/downloads/')}>Downloads</a
-			>
 			<p class="sidebar-heading">Reference</p>
 			<a class="sidebar-item external" href="https://docs.rs/asyncband/">API documentation</a>
 		</nav>
@@ -71,11 +66,10 @@
 					<a href={resolve('/docs/getting-started/')}>Getting Started</a>
 					<a href={resolve('/docs/primitives/')}>Primitives</a>
 					<a href={resolve('/docs/runtime/')}>Runtime and Blocking</a>
-					<a href={resolve('/downloads/')}>Downloads</a>
 				</nav>
 			</details>
 
-			<article class="doc-article">
+			<article class="doc-article" data-pagefind-body>
 				{@render children()}
 			</article>
 

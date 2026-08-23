@@ -283,7 +283,7 @@ pre {
 
 .search-results > a {
 	display: flex;
-	align-items: baseline;
+	align-items: flex-start;
 	justify-content: space-between;
 	gap: 1rem;
 	padding: 0.7rem 0.75rem;
@@ -297,11 +297,28 @@ pre {
 	text-decoration: none;
 }
 
-.search-results > a strong {
+.search-result-main {
+	display: grid;
+	gap: 0.18rem;
+	min-width: 0;
+}
+
+.search-result-main strong {
 	font-size: 0.9rem;
 }
 
-.search-results > a span {
+.search-result-main small {
+	display: -webkit-box;
+	overflow: hidden;
+	color: var(--subtle);
+	font-size: 0.75rem;
+	font-weight: 400;
+	line-height: 1.4;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+.search-result-path {
 	color: var(--subtle);
 	font-size: 0.74rem;
 	white-space: nowrap;
@@ -312,6 +329,30 @@ pre {
 	color: var(--subtle);
 	font-size: 0.88rem;
 	text-align: center;
+}
+
+.standalone-page {
+	min-height: calc(100vh - var(--navbar-height));
+	padding: 4rem 1.5rem 6rem;
+}
+
+.standalone-article {
+	max-width: 960px;
+	margin: 0 auto;
+}
+
+.standalone-article h1 {
+	margin: 0 0 1.5rem;
+	font-size: 2.7rem;
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+}
+
+.standalone-article p {
+	max-width: 680px;
+	margin: 0;
+	font-size: 1rem;
+	line-height: 1.7;
 }
 
 .asf-menu {
@@ -791,6 +832,14 @@ pre {
 
 	.doc-article h2 {
 		font-size: 1.65rem;
+	}
+
+	.standalone-page {
+		padding: 2.5rem 1rem 4rem;
+	}
+
+	.standalone-article h1 {
+		font-size: 2.1rem;
 	}
 
 	.footer-inner {

@@ -7,10 +7,18 @@
 
 import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
+import sirv from 'sirv';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [
+		{
+			name: 'serve-static-build-preview',
+			configurePreviewServer(server) {
+				// Pagefind writes its bundle after SvelteKit creates the static adapter manifest.
+				server.middlewares.use(sirv('build', { dev: true }));
+			}
+		},
 		sveltekit({
 			compilerOptions: {
 				// Force runes mode for the project, except for libraries. Can be removed in svelte 6.

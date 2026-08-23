@@ -13,6 +13,8 @@ npm run dev
 
 The local site is available at `http://localhost:5173/` by default.
 
+Pagefind search is generated from the static HTML during `npm run build`, so use the production preview below when testing search.
+
 ## Validating
 
 Run the type, formatting, lint, and production-build checks:
