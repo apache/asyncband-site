@@ -21,7 +21,7 @@ github:
   description: Apache Asyncband Website
   homepage: https://asyncband.apache.org/
   features:
-    issues: false
+    issues: true
     projects: false
     wiki: false
   labels:
