@@ -7,8 +7,21 @@
 
 import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { mdsvex } from 'mdsvex';
 import sirv from 'sirv';
+import type { PreprocessorGroup } from 'svelte/compiler';
 import { defineConfig } from 'vite';
+import mdsvexConfig from './mdsvex.config.ts';
+
+const modernizeMdsvexOutput: PreprocessorGroup = {
+	name: 'modernize-mdsvex-output',
+	markup: ({ content, filename }) => {
+		if (!filename?.endsWith('.svx')) return;
+
+		// MDsveX still emits Svelte's deprecated module-script spelling.
+		return { code: content.replace('<script context="module">', '<script module>') };
+	}
+};
 
 export default defineConfig({
 	plugins: [
@@ -20,6 +33,8 @@ export default defineConfig({
 			}
 		},
 		sveltekit({
+			extensions: ['.svelte', '.svx'],
+			preprocess: [mdsvex(mdsvexConfig), modernizeMdsvexOutput],
 			compilerOptions: {
 				// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
 				runes: ({ filename }) =>
