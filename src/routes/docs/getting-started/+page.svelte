@@ -9,6 +9,7 @@
 
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import DocsShell from '$lib/components/DocsShell.svelte';
 
 	const mutexExample = `use asyncband::mutex::Mutex;
@@ -47,7 +48,7 @@ assert_eq!(*counter.lock().await, 1);`;
 
 	<h2 id="installation">Installation</h2>
 	<p>Add Asyncband to the project and explicitly enable the APIs it uses.</p>
-	<pre><code>cargo add asyncband --features mutex,oneshot</code></pre>
+	<CodeBlock language="bash" code="cargo add asyncband --features mutex,oneshot" />
 	<p>
 		No APIs are enabled by default. A bare <code>cargo add asyncband</code> intentionally exposes no optional
 		modules.
@@ -55,7 +56,7 @@ assert_eq!(*counter.lock().await, 1);`;
 
 	<h2 id="using-a-primitive">Using a Primitive</h2>
 	<p>After enabling a feature, use its module directly.</p>
-	<pre><code>{mutexExample}</code></pre>
+	<CodeBlock language="rust" code={mutexExample} />
 
 	<h2 id="selecting-features">Selecting Features</h2>
 	<p>

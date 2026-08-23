@@ -8,6 +8,7 @@
 -->
 
 <script lang="ts">
+	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import DocsShell from '$lib/components/DocsShell.svelte';
 
 	const blockingExample = `use std::time::Duration;
@@ -60,8 +61,8 @@ assert_eq!(value, Some(42));`;
 	<p>
 		The optional <code>blocking</code> module bridges synchronous Rust code to runtime-agnostic futures.
 	</p>
-	<pre><code>cargo add asyncband --features blocking</code></pre>
-	<pre><code>{blockingExample}</code></pre>
+	<CodeBlock language="bash" code="cargo add asyncband --features blocking" />
+	<CodeBlock language="rust" code={blockingExample} />
 
 	<h2 id="async-first">Async First, Blocking by Adaptation</h2>
 	<p>

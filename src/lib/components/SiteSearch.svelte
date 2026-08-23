@@ -127,10 +127,10 @@
 			featured: false
 		},
 		{
-			title: 'Community',
-			page: 'Project',
-			href: '/community/',
-			keywords: 'mailing list source issues incubation project',
+			title: 'Downloads',
+			page: 'Releases',
+			href: '/downloads/',
+			keywords: 'release source archive signature checksum',
 			featured: true
 		}
 	] as const satisfies readonly SearchEntry[];

@@ -17,6 +17,7 @@
 
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import DocsShell from '$lib/components/DocsShell.svelte';
 </script>
 
@@ -55,7 +56,7 @@
 
 	<h2 id="installation">Installation</h2>
 	<p>Add the dependency to your project and list every API that the application uses.</p>
-	<pre><code>cargo add asyncband --features mutex,oneshot</code></pre>
+	<CodeBlock language="bash" code="cargo add asyncband --features mutex,oneshot" />
 	<p>
 		The crate enables no APIs by default. A bare <code>cargo add asyncband</code> intentionally exposes
 		no optional modules.

@@ -9,6 +9,7 @@
 
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import DocsShell from '$lib/components/DocsShell.svelte';
 	import { primitiveGroups } from '$lib/site';
 </script>
@@ -71,7 +72,7 @@
 		It is an interoperability utility rather than another async primitive, so it is documented separately
 		from the tables above.
 	</p>
-	<pre><code>cargo add asyncband --features blocking</code></pre>
+	<CodeBlock language="bash" code="cargo add asyncband --features blocking" />
 	<p>
 		See <a href={resolve('/docs/runtime/#synchronous-interoperability')}>Runtime and Blocking</a>
 		for the execution model and constraints.

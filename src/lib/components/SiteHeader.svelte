@@ -24,10 +24,9 @@
 			<a class:active={page.url.pathname.startsWith('/docs/')} href={resolve('/docs/about/')}
 				>Documentation</a
 			>
-			<a class:active={page.url.pathname === resolve('/community/')} href={resolve('/community/')}
-				>Community</a
+			<a class:active={page.url.pathname === resolve('/downloads/')} href={resolve('/downloads/')}
+				>Downloads</a
 			>
-			<a href="https://crates.io/crates/asyncband">Crate</a>
 			<a
 				class="github-link"
 				href="https://github.com/apache/asyncband"
@@ -52,8 +51,7 @@
 			<summary aria-label="Open navigation">☰</summary>
 			<nav aria-label="Mobile navigation">
 				<a href={resolve('/docs/about/')}>Documentation</a>
-				<a href={resolve('/community/')}>Community</a>
-				<a href="https://crates.io/crates/asyncband">Crate</a>
+				<a href={resolve('/downloads/')}>Downloads</a>
 				<a href="https://docs.rs/asyncband/">API docs</a>
 				<a href="https://github.com/apache/asyncband">GitHub</a>
 			</nav>

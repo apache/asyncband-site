@@ -524,8 +524,75 @@ pre {
 .doc-article pre code {
 	padding: 0;
 	font-size: 0.86rem;
+	color: #24292f;
 	background: transparent;
 	border: 0;
+}
+
+.doc-article .hljs-comment,
+.doc-article .hljs-quote {
+	color: #6e7781;
+}
+
+.doc-article .hljs-keyword,
+.doc-article .hljs-selector-tag,
+.doc-article .hljs-literal,
+.doc-article .hljs-section,
+.doc-article .hljs-link {
+	color: #cf222e;
+}
+
+.doc-article .hljs-string,
+.doc-article .hljs-title,
+.doc-article .hljs-name,
+.doc-article .hljs-type,
+.doc-article .hljs-attribute,
+.doc-article .hljs-symbol,
+.doc-article .hljs-bullet,
+.doc-article .hljs-addition,
+.doc-article .hljs-variable,
+.doc-article .hljs-template-tag,
+.doc-article .hljs-template-variable {
+	color: #0a3069;
+}
+
+.doc-article .hljs-number,
+.doc-article .hljs-meta,
+.doc-article .hljs-built_in,
+.doc-article .hljs-builtin-name,
+.doc-article .hljs-params {
+	color: #0550ae;
+}
+
+.doc-article .hljs-title.class_,
+.doc-article .hljs-class .hljs-title,
+.doc-article .hljs-title.function_ {
+	color: #8250df;
+}
+
+.doc-article .hljs-attr,
+.doc-article .hljs-selector-id,
+.doc-article .hljs-selector-class,
+.doc-article .hljs-selector-attr,
+.doc-article .hljs-selector-pseudo {
+	color: #953800;
+}
+
+.doc-article .hljs-deletion {
+	color: #82071e;
+	background: #ffebe9;
+}
+
+.doc-article .hljs-addition {
+	background: #dafbe1;
+}
+
+.doc-article .hljs-emphasis {
+	font-style: italic;
+}
+
+.doc-article .hljs-strong {
+	font-weight: 700;
 }
 
 .table-wrapper {
