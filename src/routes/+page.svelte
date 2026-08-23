@@ -17,299 +17,148 @@
 
 <script lang="ts">
 	import { resolve } from '$app/paths';
-
-	const primitiveGroups = [
-		{
-			index: '01',
-			name: 'Shared state',
-			description: 'Coordinate access and initialize values exactly once.',
-			items: ['Mutex', 'RwLock', 'Condvar', 'Once', 'OnceCell', 'OnceMap']
-		},
-		{
-			index: '02',
-			name: 'Task coordination',
-			description: 'Make progress visible across independently scheduled tasks.',
-			items: ['Barrier', 'Latch', 'WaitGroup', 'shutdown']
-		},
-		{
-			index: '03',
-			name: 'Channels',
-			description: 'Move values with explicit capacity and delivery semantics.',
-			items: ['oneshot', 'bounded mpsc', 'unbounded mpsc', 'broadcast']
-		},
-		{
-			index: '04',
-			name: 'Workload control',
-			description: 'Bound concurrency and coalesce duplicate work.',
-			items: ['Semaphore', 'singleflight Group']
-		}
-	];
-
-	const principles = [
-		{
-			name: 'Runtime neutral',
-			body: 'The primitives depend on futures, not on a particular executor. Bring the runtime that fits your application.'
-		},
-		{
-			name: 'Explicit surface',
-			body: 'No primitive is enabled by default. Feature flags keep dependencies and public APIs intentional.'
-		},
-		{
-			name: 'Honest safety bounds',
-			body: 'Send and Sync implementations follow the values a primitive protects, stores, or transfers.'
-		},
-		{
-			name: 'Async first',
-			body: 'Blocking support stays at the boundary as an adapter instead of duplicating every asynchronous API.'
-		}
-	];
-
-	const useCases = [
-		['Bounded pipelines', 'Keep producers from outrunning the work a system can safely absorb.'],
-		[
-			'Coordinated lifecycle',
-			'Wait for startup, fan-in completion, and graceful shutdown without runtime coupling.'
-		],
-		[
-			'Shared initialization',
-			'Construct expensive state once and let concurrent callers await the same result.'
-		],
-		[
-			'Duplicate suppression',
-			'Collapse concurrent requests for the same key into one in-flight operation.'
-		]
-	];
+	import { apiCategories } from '$lib/site';
 </script>
 
 <svelte:head>
 	<title>Apache Asyncband™ (Incubating) — Async synchronization for Rust</title>
 	<meta
 		name="description"
-		content="Apache Asyncband is a runtime-agnostic Rust library of synchronization and coordination primitives for asynchronous programs."
+		content="Runtime-agnostic synchronization and coordination tools for asynchronous Rust."
 	/>
-	<meta name="theme-color" content="#121512" />
 	<link rel="canonical" href="https://asyncband.apache.org/" />
-	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://asyncband.apache.org/" />
 	<meta property="og:title" content="Apache Asyncband™ (Incubating)" />
 	<meta
 		property="og:description"
-		content="Runtime-agnostic synchronization and coordination primitives for asynchronous Rust."
-	/>
-	<meta property="og:image" content="https://asyncband.apache.org/og.png" />
-	<meta property="og:image:width" content="1200" />
-	<meta property="og:image:height" content="630" />
-	<meta
-		property="og:image:alt"
-		content="Apache Asyncband — Synchronize work. Not runtimes. — Incubating"
-	/>
-	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:image" content="https://asyncband.apache.org/og.png" />
-	<meta
-		name="twitter:image:alt"
-		content="Apache Asyncband — Synchronize work. Not runtimes. — Incubating"
+		content="Runtime-agnostic synchronization and coordination tools for asynchronous Rust."
 	/>
 </svelte:head>
 
-<a class="skip-link" href="#content">Skip to content</a>
-
-<div class="site-shell">
-	<header class="site-header">
-		<a class="brand" href={resolve('/')} aria-label="Apache Asyncband home">
-			<span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-			<span>Apache Asyncband<sup>™</sup></span>
-			<small>Incubating</small>
-		</a>
-
-		<nav aria-label="Primary navigation">
-			<a href="#primitives">Primitives</a>
-			<a href="#principles">Principles</a>
-			<a href="#uses">Use cases</a>
-		</nav>
-
-		<a class="header-link" href="https://docs.rs/asyncband/">API docs <span>↗</span></a>
-	</header>
-
-	<main id="content">
-		<section class="hero" aria-labelledby="hero-title">
+<main id="main-content">
+	<section class="hero">
+		<div class="container hero-grid">
 			<div class="hero-copy">
-				<p class="eyebrow"><span></span> Async coordination for Rust</p>
-				<h1 id="hero-title">Synchronize work.<br /><em>Not runtimes.</em></h1>
+				<p class="eyebrow">Apache Asyncband<sup>™</sup> (Incubating)</p>
+				<h1>Runtime-agnostic synchronization for async Rust.</h1>
 				<p class="hero-summary">
-					Apache Asyncband software is a runtime-agnostic library of synchronization and
-					coordination primitives for asynchronous Rust programs.
+					Locks, initialization tools, task coordination, channels, object pools, and workload
+					controls without tying an application to a particular async runtime.
 				</p>
 
-				<div class="hero-actions">
-					<a class="button button-primary" href="#primitives"
-						>Explore the primitives <span>↓</span></a
-					>
-					<a class="button button-secondary" href="https://github.com/apache/asyncband"
-						>View source <span>↗</span></a
-					>
+				<div class="button-row">
+					<a class="button button-primary" href={resolve('/primitives/')}>Browse the primitives</a>
+					<a class="button button-secondary" href="https://docs.rs/asyncband/">
+						API documentation <span aria-hidden="true">↗</span>
+					</a>
 				</div>
 
-				<ul class="hero-facts" aria-label="Project characteristics">
-					<li><span>01</span> Runtime agnostic</li>
-					<li><span>02</span> Feature gated</li>
-					<li><span>03</span> Async first</li>
+				<ul class="project-facts" aria-label="Project facts">
+					<li><strong>No default features</strong><span>Enable only the APIs you use</span></li>
+					<li><strong>Rust 1.86+</strong><span>Minimum supported version</span></li>
+					<li><strong>Apache 2.0</strong><span>Open source license</span></li>
 				</ul>
 			</div>
 
-			<div class="code-panel" aria-label="Asyncband semaphore example">
-				<div class="code-panel-header">
-					<span>semaphore.rs</span>
-					<span class="code-status"><i></i> runtime neutral</span>
+			<div class="code-card" aria-label="Asyncband mutex example">
+				<div class="code-card-header">
+					<span>Get started</span>
+					<a href="https://crates.io/crates/asyncband"
+						>crates.io <span aria-hidden="true">↗</span></a
+					>
+				</div>
+				<div class="install-command">
+					<code><span>$</span> cargo add asyncband --features mutex</code>
 				</div>
 				<pre><code
-						><span class="code-keyword">use</span> asyncband::semaphore::Semaphore;
+						><span class="syntax-keyword">use</span> asyncband::mutex::Mutex;
 
-<span class="code-keyword">let</span> gate = Semaphore::new(<span class="code-number">3</span>);
+<span class="syntax-keyword">let</span> counter = Mutex::new(<span class="syntax-number">0</span>);
+&#123;
+    <span class="syntax-keyword">let mut</span> value = counter.lock().await;
+    *value += <span class="syntax-number">1</span>;
+&#125;
 
-<span class="code-comment">// Capacity returns when the permit drops.</span>
-<span class="code-keyword">let</span> permit = gate.acquire(<span class="code-number">1</span
-						>).await;
-do_work().await;
-drop(permit);</code
+assert_eq!(*counter.lock().await, <span class="syntax-number">1</span>);</code
 					></pre>
-				<div class="code-command">
-					<span>$</span>
-					<code>cargo add asyncband --features semaphore</code>
-				</div>
-			</div>
-		</section>
-
-		<aside class="incubation-note" aria-labelledby="incubation-title">
-			<div class="incubation-label">
-				<span>ASF</span>
-				<strong id="incubation-title">Incubation notice</strong>
-			</div>
-			<p>
-				Apache Asyncband (Incubating) is an effort undergoing incubation at the Apache Software
-				Foundation (ASF), sponsored by the Apache Incubator PMC. Incubation is required of all newly
-				accepted projects until a further review indicates that the infrastructure, communications,
-				and decision making process have stabilized in a manner consistent with other successful ASF
-				projects. While incubation status is not necessarily a reflection of the completeness or
-				stability of the code, it does indicate that the project has yet to be fully endorsed by the
-				ASF.
-			</p>
-			<a href="https://incubator.apache.org/projects/asyncband.html"
-				>Project status <span>↗</span></a
-			>
-		</aside>
-
-		<section class="section primitives" id="primitives" aria-labelledby="primitives-title">
-			<div class="section-heading">
-				<p class="eyebrow"><span></span> The taxonomy</p>
-				<h2 id="primitives-title">One vocabulary.<br />Four kinds of work.</h2>
-				<p>
-					Pick only the modules your program needs. Each category describes the job a primitive
-					performs, without adding another level to its public path.
+				<p class="code-note">
+					The same API works with any executor that polls standard Rust futures.
 				</p>
 			</div>
+		</div>
+	</section>
 
-			<div class="primitive-grid">
-				{#each primitiveGroups as group (group.name)}
-					<article class="primitive-card">
-						<div class="card-index">{group.index}</div>
-						<h3>{group.name}</h3>
-						<p>{group.description}</p>
-						<ul>
-							{#each group.items as item (item)}
-								<li>{item}</li>
+	<section class="status-strip" aria-label="Incubation status">
+		<div class="container status-strip-inner">
+			<p><strong>Apache Incubator</strong> Asyncband entered incubation on August 19, 2026.</p>
+			<a href="https://incubator.apache.org/projects/asyncband.html">
+				Project status <span aria-hidden="true">↗</span>
+			</a>
+		</div>
+	</section>
+
+	<section class="page-section" aria-labelledby="api-heading">
+		<div class="container">
+			<div class="section-heading">
+				<div>
+					<p class="section-label">Available APIs</p>
+					<h2 id="api-heading">Pick the modules your program needs.</h2>
+				</div>
+				<div>
+					<p>
+						No APIs are enabled by default. Cargo features expose primitives directly at concise
+						public paths such as <code>asyncband::mutex</code> and
+						<code>asyncband::once::OnceCell</code>.
+					</p>
+					<a class="text-link" href={resolve('/primitives/')}>See every API and feature →</a>
+				</div>
+			</div>
+
+			<div class="api-grid">
+				{#each apiCategories as category (category.name)}
+					<article>
+						<h3>{category.name}</h3>
+						<p>{category.description}</p>
+						<ul aria-label={`${category.name} APIs`}>
+							{#each category.apis as api (api)}
+								<li><code>{api}</code></li>
 							{/each}
 						</ul>
 					</article>
 				{/each}
 			</div>
-		</section>
+		</div>
+	</section>
 
-		<section class="section principles" id="principles" aria-labelledby="principles-title">
-			<div class="section-heading compact">
-				<p class="eyebrow"><span></span> Interface promises</p>
-				<h2 id="principles-title">Small surface.<br />Strong boundaries.</h2>
-			</div>
-
-			<div class="principle-list">
-				{#each principles as principle, index (principle.name)}
-					<article>
-						<span>{String(index + 1).padStart(2, '0')}</span>
-						<h3>{principle.name}</h3>
-						<p>{principle.body}</p>
-					</article>
-				{/each}
-			</div>
-		</section>
-
-		<section class="section uses" id="uses" aria-labelledby="uses-title">
-			<div class="uses-intro">
-				<p class="eyebrow light"><span></span> Where it fits</p>
-				<h2 id="uses-title">Coordination is infrastructure.<br /><em>Keep it portable.</em></h2>
-			</div>
-
-			<div class="use-grid">
-				{#each useCases as useCase, index (useCase[0])}
-					<article>
-						<span>{String(index + 1).padStart(2, '0')}</span>
-						<h3>{useCase[0]}</h3>
-						<p>{useCase[1]}</p>
-					</article>
-				{/each}
-			</div>
-		</section>
-
-		<section class="resources" aria-labelledby="resources-title">
+	<section class="page-section resource-section" aria-labelledby="resource-heading">
+		<div class="container resource-layout">
 			<div>
-				<p class="eyebrow"><span></span> Start here</p>
-				<h2 id="resources-title">Use the library.<br />Read the contracts.</h2>
+				<p class="section-label">Project resources</p>
+				<h2 id="resource-heading">Read, use, and contribute.</h2>
 			</div>
-			<div class="resource-links">
+			<div class="resource-list">
 				<a href="https://docs.rs/asyncband/">
-					<span>01 / Documentation</span>
-					<strong>Browse the API contracts</strong>
-					<i>↗</i>
+					<span
+						><strong>API documentation</strong><small>Public types, functions, and contracts</small
+						></span
+					>
+					<span aria-hidden="true">↗</span>
 				</a>
 				<a href="https://crates.io/crates/asyncband">
-					<span>02 / Crate</span>
-					<strong>Add Asyncband to a project</strong>
-					<i>↗</i>
+					<span
+						><strong>asyncband on crates.io</strong><small>Published crate and versions</small
+						></span
+					>
+					<span aria-hidden="true">↗</span>
 				</a>
 				<a href="https://github.com/apache/asyncband">
-					<span>03 / Repository</span>
-					<strong>Read the source and contribute</strong>
-					<i>↗</i>
-				</a>
-				<a href="mailto:dev@asyncband.apache.org">
-					<span>04 / Community</span>
-					<strong>Talk with the project</strong>
-					<i>↗</i>
+					<span
+						><strong>Source repository</strong><small>Code, issues, and contribution history</small
+						></span
+					>
+					<span aria-hidden="true">↗</span>
 				</a>
 			</div>
-		</section>
-	</main>
-
-	<footer class="site-footer">
-		<div class="footer-top">
-			<a class="footer-brand" href={resolve('/')}
-				>Apache Asyncband<sup>™</sup> <small>Incubating</small></a
-			>
-			<nav aria-label="Apache Software Foundation links">
-				<a href="https://www.apache.org/">Apache Software Foundation</a>
-				<a href="https://www.apache.org/licenses/">License</a>
-				<a href="https://www.apache.org/security/">Security</a>
-				<a href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a>
-				<a href="https://www.apache.org/foundation/thanks.html">Thanks</a>
-				<a href="https://privacy.apache.org/policies/privacy-policy-public.html">Privacy</a>
-			</nav>
 		</div>
-
-		<div class="footer-legal">
-			<p>
-				Apache Asyncband, Asyncband, and Apache are either registered trademarks or trademarks of
-				The Apache Software Foundation in the United States and/or other countries. All other marks
-				mentioned may be trademarks or registered trademarks of their respective owners.
-			</p>
-			<p>Copyright © 2026 The Apache Software Foundation.</p>
-		</div>
-	</footer>
-</div>
+	</section>
+</main>
