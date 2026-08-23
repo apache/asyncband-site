@@ -21,6 +21,10 @@
 		toc?: Snippet;
 		label?: string;
 	} = $props();
+
+	const editUrl = $derived(
+		`https://github.com/apache/asyncband-site/edit/main/src/routes${page.url.pathname}+page.svelte`
+	);
 </script>
 
 <div class="docs-layout">
@@ -74,7 +78,7 @@
 			</article>
 
 			<div class="doc-source">
-				<a href="https://github.com/apache/asyncband-site">Edit this site on GitHub</a>
+				<a href={editUrl} rel="external">Edit this page on GitHub</a>
 			</div>
 		</div>
 
