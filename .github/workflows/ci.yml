@@ -15,31 +15,30 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# See https://github.com/apache/infrastructure-asfyaml/ for the configuration reference.
+name: CI
 
-github:
-  description: Apache Asyncband (Incubating) Website
-  homepage: https://asyncband.apache.org/
-  features:
-    issues: true
-    projects: false
-    wiki: false
-  labels:
-    - asyncband
-    - sveltekit
-    - website
-  enabled_merge_buttons:
-    squash: true
-    merge: false
-    rebase: false
-  protected_branches:
-    main: {}
-    asf-site: {}
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
-publish:
-  whoami: asf-site
+permissions:
+  contents: read
 
-notifications:
-  commits: commits@asyncband.apache.org
-  pullrequests: commits@asyncband.apache.org
-  jobs: commits@asyncband.apache.org
+jobs:
+  site:
+    name: Site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Validate site
+        run: npm run validate
