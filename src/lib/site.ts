@@ -13,51 +13,10 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-export const primaryNavigation = [
-	{ href: '/', label: 'Home' },
-	{ href: '/primitives/', label: 'Primitives' },
-	{ href: '/design/', label: 'Design' },
-	{ href: '/project/', label: 'Project' }
-] as const;
-
-export const apiCategories = [
-	{
-		name: 'Protect shared state',
-		apis: ['Mutex', 'RwLock', 'Condvar'],
-		description: 'Asynchronous mutual exclusion, reader-writer access, and condition waiting.'
-	},
-	{
-		name: 'Initialize values once',
-		apis: ['Once', 'OnceCell', 'OnceMap'],
-		description: 'One-time asynchronous initialization for a value, a cell, or keyed values.'
-	},
-	{
-		name: 'Coordinate tasks',
-		apis: ['Barrier', 'Latch', 'WaitGroup', 'shutdown'],
-		description: 'Synchronization points, countdowns, task-group completion, and shutdown signals.'
-	},
-	{
-		name: 'Send values',
-		apis: ['oneshot', 'mpsc'],
-		description: 'One-value, bounded, and unbounded channels between asynchronous tasks.'
-	},
-	{
-		name: 'Reuse managed objects',
-		apis: ['pool::bounded', 'pool::unbounded'],
-		description: 'Bounded and unbounded pools for reusing managed objects.'
-	},
-	{
-		name: 'Control workloads',
-		apis: ['Semaphore', 'singleflight::Group'],
-		description: 'Permit-based concurrency control and coalescing for concurrent calls by key.'
-	}
-];
-
 export const primitiveGroups = [
 	{
 		id: 'shared-state',
 		name: 'Shared state',
-		description: 'Protect shared data with asynchronous locks and condition waiting.',
 		items: [
 			{
 				name: 'Mutex',
@@ -85,7 +44,6 @@ export const primitiveGroups = [
 	{
 		id: 'initialization',
 		name: 'One-time initialization',
-		description: 'Run asynchronous initialization once globally or once per key.',
 		items: [
 			{
 				name: 'Once',
@@ -113,7 +71,6 @@ export const primitiveGroups = [
 	{
 		id: 'task-coordination',
 		name: 'Task coordination',
-		description: 'Coordinate synchronization points, countdowns, task groups, and shutdown.',
 		items: [
 			{
 				name: 'Barrier',
@@ -148,7 +105,6 @@ export const primitiveGroups = [
 	{
 		id: 'channels',
 		name: 'Channels',
-		description: 'Send one value or a stream of values between asynchronous tasks.',
 		items: [
 			{
 				name: 'oneshot::channel',
@@ -176,7 +132,6 @@ export const primitiveGroups = [
 	{
 		id: 'resource-reuse',
 		name: 'Resource reuse',
-		description: 'Reuse managed objects with bounded or unbounded pools.',
 		items: [
 			{
 				name: 'pool::bounded',
@@ -197,7 +152,6 @@ export const primitiveGroups = [
 	{
 		id: 'workload-control',
 		name: 'Workload control',
-		description: 'Control concurrent access and coalesce concurrent calls by key.',
 		items: [
 			{
 				name: 'Semaphore',

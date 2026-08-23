@@ -10,34 +10,52 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { primaryNavigation } from '$lib/site';
-
-	type NavigationHref = (typeof primaryNavigation)[number]['href'];
-
-	function isCurrent(href: NavigationHref) {
-		const path = resolve(href);
-		return href === '/' ? page.url.pathname === path : page.url.pathname.startsWith(path);
-	}
 </script>
 
-<header class="site-header">
-	<div class="header-inner">
-		<a class="wordmark" href={resolve('/')} aria-label="Apache Asyncband (Incubating) home">
-			<span>Apache Asyncband<sup>™</sup></span>
+<header class="navbar">
+	<div class="navbar-inner">
+		<a class="navbar-brand" href={resolve('/docs/about/')}>
+			<span>Apache Asyncband</span>
 			<small>Incubating</small>
 		</a>
 
-		<nav aria-label="Primary navigation">
-			{#each primaryNavigation as item (item.href)}
-				<a href={resolve(item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>
-					{item.label}
-				</a>
-			{/each}
+		<nav class="navbar-links" aria-label="Primary navigation">
+			<a class:active={page.url.pathname.startsWith('/docs/')} href={resolve('/docs/about/')}
+				>Documentation</a
+			>
+			<a class:active={page.url.pathname === resolve('/community/')} href={resolve('/community/')}
+				>Community</a
+			>
+			<a href="https://crates.io/crates/asyncband">Crate</a>
+			<a
+				class="github-link"
+				href="https://github.com/apache/asyncband"
+				aria-label="GitHub repository"
+			></a>
+			<a class="api-search" href="https://docs.rs/asyncband/">API documentation</a>
+			<details class="asf-menu">
+				<summary>ASF</summary>
+				<div>
+					<a href="https://www.apache.org/">Foundation</a>
+					<a href="https://www.apache.org/licenses/">License</a>
+					<a href="https://www.apache.org/events/current-event.html">Events</a>
+					<a href="https://www.apache.org/security/">Security</a>
+					<a href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a>
+					<a href="https://privacy.apache.org/policies/privacy-policy-public.html">Privacy</a>
+					<a href="https://www.apache.org/foundation/thanks.html">Thanks</a>
+				</div>
+			</details>
 		</nav>
 
-		<div class="header-actions">
-			<a href="https://docs.rs/asyncband/">API docs <span aria-hidden="true">↗</span></a>
-			<a href="https://github.com/apache/asyncband">GitHub <span aria-hidden="true">↗</span></a>
-		</div>
+		<details class="mobile-menu">
+			<summary aria-label="Open navigation">☰</summary>
+			<nav aria-label="Mobile navigation">
+				<a href={resolve('/docs/about/')}>Documentation</a>
+				<a href={resolve('/community/')}>Community</a>
+				<a href="https://crates.io/crates/asyncband">Crate</a>
+				<a href="https://docs.rs/asyncband/">API docs</a>
+				<a href="https://github.com/apache/asyncband">GitHub</a>
+			</nav>
+		</details>
 	</div>
 </header>
