@@ -41,7 +41,7 @@ github:
 staging:
   profile: ~
   whoami: asf-site
-  autostage: preview/*
+  autostage: site/*
 
 publish:
   whoami: asf-site
