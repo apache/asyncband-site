@@ -23,7 +23,7 @@
 	} = $props();
 
 	const editUrl = $derived(
-		`https://github.com/apache/asyncband-site/edit/main/src/routes${page.url.pathname}+page.svx`
+		`https://github.com/apache/asyncband-site/edit/main/src/routes${page.url.pathname}+page.md`
 	);
 </script>
 

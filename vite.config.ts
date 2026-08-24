@@ -16,7 +16,7 @@ import mdsvexConfig from './mdsvex.config.ts';
 const modernizeMdsvexOutput: PreprocessorGroup = {
 	name: 'modernize-mdsvex-output',
 	markup: ({ content, filename }) => {
-		if (!filename?.endsWith('.svx')) return;
+		if (!filename?.endsWith('.md')) return;
 
 		// MDsveX still emits Svelte's deprecated module-script spelling.
 		return { code: content.replace('<script context="module">', '<script module>') };
@@ -33,7 +33,7 @@ export default defineConfig({
 			}
 		},
 		sveltekit({
-			extensions: ['.svelte', '.svx'],
+			extensions: ['.svelte', '.md'],
 			preprocess: [mdsvex(mdsvexConfig), modernizeMdsvexOutput],
 			compilerOptions: {
 				// Force runes mode for the project, except for libraries. Can be removed in svelte 6.

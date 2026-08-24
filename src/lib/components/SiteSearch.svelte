@@ -40,8 +40,8 @@
 		excerpt: string;
 	};
 
-	let dialog: HTMLDialogElement;
-	let input: HTMLInputElement;
+	let dialog = $state<HTMLDialogElement>();
+	let input = $state<HTMLInputElement>();
 	let query = $state('');
 	let results = $state<DisplayResult[]>([]);
 	let loading = $state(false);
@@ -115,27 +115,27 @@
 		} catch {
 			if (version !== searchVersion) return;
 			results = [];
-			searchError = 'Search is available in the production preview after running npm run build.';
+			searchError = 'Search is available in the production preview after running pnpm build.';
 		} finally {
 			if (version === searchVersion) loading = false;
 		}
 	}
 
 	async function openSearch() {
-		dialog.showModal();
+		dialog?.showModal();
 		void loadPagefind().catch(() => undefined);
 		await tick();
-		input.focus();
+		input?.focus();
 	}
 
 	function closeSearch() {
-		dialog.close();
+		dialog?.close();
 	}
 
 	function handleShortcut(event: KeyboardEvent) {
 		if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
 			event.preventDefault();
-			if (dialog.open) {
+			if (dialog?.open) {
 				closeSearch();
 			} else {
 				void openSearch();
@@ -178,7 +178,6 @@
 		{:else if results.length > 0}
 			{#each results as result (result.url)}
 				<!-- Pagefind only returns URLs generated from local static pages. -->
-				<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 				<a href={result.url} onclick={closeSearch}>
 					<span class="search-result-main">
 						<strong>{result.title}</strong>
