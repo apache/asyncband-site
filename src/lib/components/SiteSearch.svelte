@@ -40,8 +40,10 @@
 		excerpt: string;
 	};
 
-	let dialog = $state<HTMLDialogElement>();
-	let input = $state<HTMLInputElement>();
+	// oxlint-disable-next-line no-unassigned-vars -- Assigned by Svelte's bind:this directive.
+	let dialog: HTMLDialogElement;
+	// oxlint-disable-next-line no-unassigned-vars -- Assigned by Svelte's bind:this directive.
+	let input: HTMLInputElement;
 	let query = $state('');
 	let results = $state<DisplayResult[]>([]);
 	let loading = $state(false);
@@ -122,20 +124,20 @@
 	}
 
 	async function openSearch() {
-		dialog?.showModal();
+		dialog.showModal();
 		void loadPagefind().catch(() => undefined);
 		await tick();
-		input?.focus();
+		input.focus();
 	}
 
 	function closeSearch() {
-		dialog?.close();
+		dialog.close();
 	}
 
 	function handleShortcut(event: KeyboardEvent) {
 		if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
 			event.preventDefault();
-			if (dialog?.open) {
+			if (dialog.open) {
 				closeSearch();
 			} else {
 				void openSearch();
