@@ -6,5 +6,5 @@
 	"printWidth": 100,
 	"proseWrap": "never",
 	"svelte": true,
-	"ignorePatterns": ["pnpm-lock.yaml", "static/**"]
+	"ignorePatterns": ["**/*.svx", "pnpm-lock.yaml", "static/**"]
 }

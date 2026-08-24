@@ -17,7 +17,7 @@ Pagefind search is generated from the static HTML during `pnpm build`, so use th
 
 ## Writing documentation
 
-Documentation pages live under `src/routes/docs/` as MDsveX `.md` files. Each page starts with frontmatter for its navigation label and metadata; the rest of the file is Markdown.
+Documentation pages live under `src/routes/docs/` as MDsveX `.svx` files. Each page starts with frontmatter for its navigation label and metadata; the rest of the file is Markdown.
 
 Second-level headings generate the on-page table of contents automatically. Fenced `bash` and `rust` code blocks are highlighted during the build. MDsveX also supports Svelte components when a document needs behavior beyond Markdown.
 

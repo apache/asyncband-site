@@ -131,7 +131,7 @@ function highlightCode(code: string, language?: string | null): string {
 }
 
 const config: MdsvexOptions = {
-	extensions: ['.md'],
+	extensions: ['.svx'],
 	layout: path.resolve(import.meta.dirname, 'src/lib/components/MarkdownPage.svelte'),
 	layoutPropForwarding: 'runes',
 	smartypants: false,
