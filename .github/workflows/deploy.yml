@@ -46,23 +46,20 @@ jobs:
           corepack enable pnpm
           pnpm install --frozen-lockfile
           pnpm build
-      - name: Select staging branch
-        id: staging
-        if: startsWith(github.ref_name, 'preview/')
+      - name: Select publish branch
+        id: publish
         env:
           SOURCE_BRANCH: ${{ github.ref_name }}
-        run: echo "branch=site/${SOURCE_BRANCH#preview/}-staging" >> "$GITHUB_OUTPUT"
-      - name: Publish production site
-        if: github.ref_name == 'main'
+        run: |
+          if [ "$SOURCE_BRANCH" = main ]; then
+            publish_branch=asf-site
+          else
+            publish_branch="site/${SOURCE_BRANCH#preview/}-staging"
+          fi
+          echo "branch=$publish_branch" >> "$GITHUB_OUTPUT"
+      - name: Publish site (${{ steps.publish.outputs.branch }})
         uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
-          publish_branch: asf-site
-      - name: Publish staging site
-        if: startsWith(github.ref_name, 'preview/')
-        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-          publish_branch: ${{ steps.staging.outputs.branch }}
+          publish_branch: ${{ steps.publish.outputs.branch }}
