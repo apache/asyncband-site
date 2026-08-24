@@ -1,0 +1,1 @@
+import{Z as e}from"../chunks/CxoQY3RK.js";import{r as t}from"../chunks/Dt-HX3Vu.js";import"../chunks/xihTtKlq.js";function n(e,n){throw new t(e,n.toString())}var r=e({load:()=>i});function i(){n(308,`/docs/about/`)}function a(e){}export{a as component,r as universal};

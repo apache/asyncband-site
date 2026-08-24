@@ -1,0 +1,71 @@
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more contributor
+ license agreements. See the NOTICE file distributed with this work for
+ additional information regarding copyright ownership. The ASF licenses this
+ file to you under the Apache License, Version 2.0 (the "License"); you may not
+ use this file except in compliance with the License. You may obtain a copy of
+ the License at https://www.apache.org/licenses/LICENSE-2.0.
+-->
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="text-scale" content="scale" />
+		<link href="../../_app/immutable/entry/start.CGDRNukD.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/BEAgfBcr.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/CxoQY3RK.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/Dt-HX3Vu.js" rel="modulepreload">
+		<link href="../../_app/immutable/entry/app.BG4veojQ.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/HclGiUj8.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/xihTtKlq.js" rel="modulepreload">
+		<link href="../../_app/immutable/nodes/0.yYy7q56g.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/D-IyLrGj.js" rel="modulepreload">
+		<link href="../../_app/immutable/nodes/4.D2PYZ06L.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/0qttr7vz.js" rel="modulepreload">
+		<!--12qhfyh--><meta name="theme-color" content="#ffffff"/> <meta property="og:type" content="website"/> <meta property="og:image" content="https://asyncband.apache.org/og.png"/> <meta property="og:image:width" content="1200"/> <meta property="og:image:height" content="630"/> <meta property="og:image:alt" content="Apache Asyncband (Incubating)"/> <meta name="twitter:card" content="summary_large_image"/> <meta name="twitter:image" content="https://asyncband.apache.org/og.png"/><!----><!--t31tvm--><meta name="description" content="Install Apache Asyncband, select Cargo features, and use an asynchronous primitive."/> <link rel="canonical" href="https://asyncband.apache.org/docs/getting-started/"/> <meta property="og:url" content="https://asyncband.apache.org/docs/getting-started/"/> <meta property="og:title" content="Getting Started | Apache Asyncband"/> <meta property="og:description" content="Install Apache Asyncband, select Cargo features, and use an asynchronous primitive."/><!----><title>Getting Started | Apache Asyncband</title>
+		<link href="../../_app/immutable/assets/0.rIqDoquK.css" rel="stylesheet">
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents"><!--[--><!--[0--><!--[--><a class="skip-link" href="#main-content">Skip to content</a> <header class="navbar"><div class="navbar-inner"><a class="navbar-brand" href="../../docs/about/"><span>Apache Asyncband</span> <small>Incubating</small></a> <nav class="navbar-links" aria-label="Primary navigation"><a href="../../docs/about/" class="active">Documentation</a> <a href="../../downloads/">Downloads</a> <a class="github-link" href="https://github.com/apache/asyncband" aria-label="GitHub repository"></a> <button class="search-trigger" type="button"><span class="search-icon" aria-hidden="true"></span> <span>Search docs</span> <kbd>⌘K</kbd></button> <dialog class="search-dialog"><div class="search-input-row"><span class="search-icon" aria-hidden="true"></span> <input value="" type="search" placeholder="Search documentation" aria-label="Search documentation"/> <button type="button">Close</button></div> <div class="search-results" aria-live="polite"><p>Search the site</p> <!--[-1--><div class="search-empty">Type at least two characters to search.</div><!--]--></div></dialog><!----> <details class="asf-menu"><summary>ASF</summary> <div><a href="https://www.apache.org/">Foundation</a> <a href="https://www.apache.org/licenses/">License</a> <a href="https://www.apache.org/events/current-event.html">Events</a> <a href="https://www.apache.org/security/">Security</a> <a href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a> <a href="https://privacy.apache.org/policies/privacy-policy-public.html">Privacy</a> <a href="https://www.apache.org/foundation/thanks.html">Thanks</a></div></details></nav> <details class="mobile-menu"><summary aria-label="Open navigation">☰</summary> <nav aria-label="Mobile navigation"><a href="../../docs/about/">Documentation</a> <a href="../../downloads/">Downloads</a> <a href="https://docs.rs/asyncband/">API docs</a> <a href="https://github.com/apache/asyncband">GitHub</a></nav></details></div></header><!----> <!--[--><div class="docs-layout"><aside class="docs-sidebar"><nav aria-label="Documentation sidebar"><a class="sidebar-item" href="../../docs/about/">About</a> <a class="sidebar-item" href="../../docs/getting-started/">Getting Started</a> <a class="sidebar-item" href="../../docs/primitives/">Primitives</a> <a class="sidebar-item" href="../../docs/runtime/">Runtime and Blocking</a> <p class="sidebar-heading">Reference</p> <a class="sidebar-item external" href="https://docs.rs/asyncband/">API documentation</a></nav></aside> <main id="main-content" class="docs-main"><div class="docs-article-column"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../../docs/about/" aria-label="Documentation home">⌂</a> <span aria-hidden="true">›</span> <span>Getting Started</span></nav> <details class="mobile-doc-navigation"><summary>Documentation</summary> <nav><a href="../../docs/about/">About</a> <a href="../../docs/getting-started/">Getting Started</a> <a href="../../docs/primitives/">Primitives</a> <a href="../../docs/runtime/">Runtime and Blocking</a></nav></details> <article class="doc-article" data-pagefind-body=""><h1>Getting Started</h1> <h2 id="installation">Installation</h2> <p>Add Asyncband to the project and explicitly enable the APIs it uses.</p> <pre data-language="bash"><code class="hljs language-bash"><!---->cargo add asyncband --features mutex,oneshot<!----></code></pre> <p>No APIs are enabled by default. A bare <code>cargo add asyncband</code> intentionally exposes no optional modules.</p> <h2 id="using-a-primitive">Using a Primitive</h2> <p>After enabling a feature, use its module directly.</p> <pre data-language="rust"><code class="hljs language-rust"><!----><span class="hljs-keyword">use</span> asyncband::mutex::Mutex;
+
+<span class="hljs-keyword">let</span> <span class="hljs-variable">counter</span> = Mutex::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-number">0</span>);
+&#123;
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">value</span> = counter.<span class="hljs-title function_ invoke__">lock</span>().<span class="hljs-keyword">await</span>;
+    *value += <span class="hljs-number">1</span>;
+&#125;
+
+<span class="hljs-built_in">assert_eq!</span>(*counter.<span class="hljs-title function_ invoke__">lock</span>().<span class="hljs-keyword">await</span>, <span class="hljs-number">1</span>);<!----></code></pre> <h2 id="selecting-features">Selecting Features</h2> <p>List every API the application uses in <code>features</code>. Categories describe each API's primary purpose and do not add another module level, so public paths remain concise.</p> <p><a href="/docs/primitives/">See the complete API and feature table.</a></p> <h2 id="api-documentation">API Documentation</h2> <p>The generated Rust API documentation is published at <a href="https://docs.rs/asyncband/" rel="nofollow">docs.rs/asyncband</a>.</p><!----><!----></article> <div class="doc-source"><a href="https://github.com/apache/asyncband-site/edit/main/src/routes/docs/getting-started/+page.md" rel="external">Edit this page on GitHub</a></div></div> <!--[0--><aside class="docs-toc" aria-label="On this page"><ul><!--[--><li><a href="#installation">Installation</a></li><li><a href="#using-a-primitive">Using a Primitive</a></li><li><a href="#selecting-features">Selecting Features</a></li><li><a href="#api-documentation">API Documentation</a></li><!--]--></ul><!----></aside><!--]--></main></div><!--]--><!----> <footer class="site-footer"><div class="footer-inner"><a class="asf-logo" href="https://www.apache.org/"><img src="/asf-logo.svg" alt="Apache Software Foundation"/></a> <div class="footer-copy"><p>Apache Asyncband (Incubating) is an effort undergoing incubation at the Apache Software
+				Foundation (ASF), sponsored by the Apache Incubator PMC. Incubation is required of all newly
+				accepted projects until a further review indicates that the infrastructure, communications,
+				and decision making process have stabilized in a manner consistent with other successful ASF
+				projects. While incubation status is not necessarily a reflection of the completeness or
+				stability of the code, it does indicate that the project has yet to be fully endorsed by the
+				ASF.</p> <p>Apache Asyncband, Asyncband, and Apache are either registered trademarks or trademarks of
+				The Apache Software Foundation in the United States and/or other countries. All other marks
+				mentioned may be trademarks or registered trademarks of their respective owners.</p></div></div></footer><!----><!--]--><!--]--> <!--[-1--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_62ebwx = {
+						base: new URL("../..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("../../_app/immutable/entry/start.CGDRNukD.js"),
+						import("../../_app/immutable/entry/app.BG4veojQ.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 4],
+							data: [null,null],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
