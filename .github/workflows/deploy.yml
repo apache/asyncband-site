@@ -15,16 +15,23 @@
 # specific language governing permissions and limitations
 # under the License.
 
-name: CI
+name: Deploy
 
 on:
-  pull_request:
+  push:
+    branches:
+      - main
+      - preview
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: site-deploy-${{ github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
-  site:
+  deploy:
     name: Site
     runs-on: ubuntu-latest
     steps:
@@ -34,9 +41,22 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 24
-      - name: Install dependencies
+      - name: Build site
         run: |
           corepack enable pnpm
           pnpm install --frozen-lockfile
-      - name: Validate site
-        run: pnpm validate
+          pnpm build
+      - name: Publish production site
+        if: github.ref_name == 'main'
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+          publish_branch: asf-site
+      - name: Publish staging site
+        if: github.ref_name == 'preview'
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+          publish_branch: asf-staging

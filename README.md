@@ -38,9 +38,9 @@ pnpm build
 pnpm preview
 ```
 
-The generated site is written to `build/`. Publishing to the `asf-site` branch will be added when the project is ready to launch the public site.
+The generated site is written to `build/`. Pushing to `main` builds and publishes the site through the `asf-site` branch.
 
-To publish a staging preview, push the site source to a branch named `preview/<name>`. GitHub Actions builds it into `preview/<name>-staging`, and ASF serves it at `https://asyncband-<name>.staged.apache.org/`.
+To publish a staging preview, push the site source to the `preview` branch. The same deployment workflow publishes the build through the `asf-staging` branch, which ASF serves at `https://asyncband.staged.apache.org/`.
 
 ## License
 

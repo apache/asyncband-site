@@ -15,38 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# See https://github.com/apache/infrastructure-asfyaml/ for the configuration reference.
-
-github:
-  description: Apache Asyncband (Incubating) Website
-  homepage: https://asyncband.apache.org/
-  features:
-    issues: true
-    projects: false
-    wiki: false
-  labels:
-    - asyncband
-    - sveltekit
-    - website
-  enabled_merge_buttons:
-    squash: true
-    merge: false
-    rebase: false
-  pull_requests:
-    del_branch_on_merge: true
-  protected_branches:
-    main: {}
-    asf-staging: {}
-    asf-site: {}
-
 staging:
   profile: ~
   whoami: asf-staging
 
 publish:
   whoami: asf-site
-
-notifications:
-  commits: commits@asyncband.apache.org
-  pullrequests: commits@asyncband.apache.org
-  jobs: commits@asyncband.apache.org
