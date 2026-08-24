@@ -36,12 +36,12 @@ github:
     del_branch_on_merge: true
   protected_branches:
     main: {}
-    asf-staging: {}
     asf-site: {}
 
 staging:
   profile: ~
-  whoami: asf-staging
+  whoami: asf-site
+  autostage: preview/*
 
 publish:
   whoami: asf-site
