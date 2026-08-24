@@ -40,7 +40,9 @@
 		excerpt: string;
 	};
 
+	// oxlint-disable-next-line no-unassigned-vars -- Assigned by Svelte's bind:this directive.
 	let dialog: HTMLDialogElement;
+	// oxlint-disable-next-line no-unassigned-vars -- Assigned by Svelte's bind:this directive.
 	let input: HTMLInputElement;
 	let query = $state('');
 	let results = $state<DisplayResult[]>([]);
@@ -115,7 +117,7 @@
 		} catch {
 			if (version !== searchVersion) return;
 			results = [];
-			searchError = 'Search is available in the production preview after running npm run build.';
+			searchError = 'Search is available in the production preview after running pnpm build.';
 		} finally {
 			if (version === searchVersion) loading = false;
 		}
@@ -178,7 +180,6 @@
 		{:else if results.length > 0}
 			{#each results as result (result.url)}
 				<!-- Pagefind only returns URLs generated from local static pages. -->
-				<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 				<a href={result.url} onclick={closeSearch}>
 					<span class="search-result-main">
 						<strong>{result.title}</strong>

@@ -7,13 +7,13 @@ This repository contains the source for the Apache Asyncband (Incubating) websit
 Install dependencies and start the SvelteKit development server:
 
 ```sh
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 The local site is available at `http://localhost:5173/` by default.
 
-Pagefind search is generated from the static HTML during `npm run build`, so use the production preview below when testing search.
+Pagefind search is generated from the static HTML during `pnpm build`, so use the production preview below when testing search.
 
 ## Writing documentation
 
@@ -26,7 +26,7 @@ Second-level headings generate the on-page table of contents automatically. Fenc
 Run the type, formatting, lint, and production-build checks:
 
 ```sh
-npm run validate
+pnpm validate
 ```
 
 ## Building and previewing
@@ -34,11 +34,13 @@ npm run validate
 Generate the static site and preview the result locally:
 
 ```sh
-npm run build
-npm run preview
+pnpm build
+pnpm preview
 ```
 
-The generated site is written to `build/`. Publishing to the `asf-site` branch will be added when the project is ready to launch the public site.
+The generated site is written to `build/`. Pushing to `main` builds and publishes the site through the `asf-site` branch.
+
+To publish a staging preview, push the site source to a branch named `preview/<name>`. The same deployment workflow publishes the build through `site/<name>-staging`, which ASF serves at `https://asyncband-<name>.staged.apache.org/`.
 
 ## License
 
