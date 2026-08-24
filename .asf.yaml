@@ -34,9 +34,15 @@ github:
     rebase: false
   pull_requests:
     del_branch_on_merge: true
-  protected_branches:
-    main: {}
-    asf-site: {}
+  rulesets:
+    - name: Protect site branches
+      type: branch
+      branches:
+        includes:
+          - main
+          - asf-site
+      restrict_deletion: true
+      restrict_force_push: true
 
 staging:
   profile: ~
