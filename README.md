@@ -40,7 +40,7 @@ pnpm preview
 
 The generated site is written to `build/`. Publishing to the `asf-site` branch will be added when the project is ready to launch the public site.
 
-Pull requests that pass CI are published at `https://asyncband-pr-<number>.staged.apache.org/`. The generated `preview/pr-<number>-staging` branch is removed when the pull request closes.
+To publish a staging preview, push the site source to a branch named `preview/<name>`. GitHub Actions builds it into `preview/<name>-staging`, and ASF serves it at `https://asyncband-<name>.staged.apache.org/`.
 
 ## License
 

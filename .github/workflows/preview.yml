@@ -18,86 +18,53 @@
 name: Preview
 
 on:
-  workflow_run:
-    workflows:
-      - CI
-    types:
-      - completed
-  pull_request_target:
-    types:
-      - closed
+  push:
+    branches:
+      - 'preview/*'
+      - '!preview/*-staging'
 
 permissions:
-  actions: read
   contents: write
 
 concurrency:
-  group: site-preview-${{ github.event.workflow_run.pull_requests[0].number || github.event.pull_request.number || github.run_id }}
+  group: site-preview-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    name: Deploy PR ${{ github.event.workflow_run.pull_requests[0].number }}
-    if: >-
-      github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.pull_requests[0].number != null
+  preview:
+    name: Build and stage
     runs-on: ubuntu-latest
     steps:
-      - name: Check out trusted publishing files
+      - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: ${{ github.event.repository.default_branch }}
-          path: publisher
-      - name: Download static build
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+          path: source
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          name: site-preview
-          path: ${{ runner.temp }}/site-preview
-          run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ github.token }}
-      - name: Validate static build
-        env:
-          PREVIEW_ROOT: ${{ runner.temp }}/site-preview
+          node-version: 24
+      - name: Build site
+        working-directory: source
         run: |
-          set -euo pipefail
-
-          if [ ! -f "$PREVIEW_ROOT/index.html" ]; then
-            echo "The preview artifact does not contain index.html." >&2
-            exit 1
-          fi
-
-          if find "$PREVIEW_ROOT" -type l -print -quit | grep -q .; then
-            echo "The preview artifact must not contain symbolic links." >&2
-            exit 1
-          fi
-
-          if find "$PREVIEW_ROOT" -name '.git*' -print -quit | grep -q .; then
-            echo "The preview artifact must not contain Git control files." >&2
-            exit 1
-          fi
-
-          if [ -e "$PREVIEW_ROOT/.asf.yaml" ]; then
-            echo "The preview artifact must not provide its own .asf.yaml." >&2
-            exit 1
-          fi
-
-          cp publisher/.asf.yaml "$PREVIEW_ROOT/.asf.yaml"
+          corepack enable pnpm
+          pnpm install --frozen-lockfile
+          pnpm build
+      - name: Check out publisher
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          path: publisher
       - name: Publish ASF preview branch
         working-directory: publisher
         env:
-          PREVIEW_ROOT: ${{ runner.temp }}/site-preview
-          PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
-          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          PREVIEW_ROOT: ${{ github.workspace }}/source/build
+          SOURCE_BRANCH: ${{ github.ref_name }}
+          SOURCE_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
 
-          case "$PR_NUMBER" in
-            ''|*[!0-9]*)
-              echo "Invalid pull request number: $PR_NUMBER" >&2
-              exit 1
-              ;;
-          esac
+          preview_branch="${SOURCE_BRANCH}-staging"
+          cp ../source/.asf.yaml "$PREVIEW_ROOT/.asf.yaml"
 
-          preview_branch="preview/pr-${PR_NUMBER}-staging"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
@@ -113,33 +80,9 @@ jobs:
           git add --all
 
           if ! git diff --cached --quiet; then
-            git commit -m "Deploy preview for PR #$PR_NUMBER" -m "Source: $SOURCE_SHA"
+            git commit -m "Deploy preview from $SOURCE_BRANCH" -m "Source: $SOURCE_SHA"
             git push --set-upstream origin "HEAD:refs/heads/$preview_branch"
           fi
 
-          echo "Preview: https://asyncband-pr-${PR_NUMBER}.staged.apache.org/" >> "$GITHUB_STEP_SUMMARY"
-
-  cleanup:
-    name: Remove PR ${{ github.event.pull_request.number }} preview
-    if: github.event_name == 'pull_request_target'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - name: Delete ASF preview branch
-        env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: |
-          set -euo pipefail
-
-          case "$PR_NUMBER" in
-            ''|*[!0-9]*)
-              echo "Invalid pull request number: $PR_NUMBER" >&2
-              exit 1
-              ;;
-          esac
-
-          preview_branch="preview/pr-${PR_NUMBER}-staging"
-          if git ls-remote --exit-code --heads origin "refs/heads/$preview_branch" >/dev/null; then
-            git push origin --delete "$preview_branch"
-          fi
+          profile="${SOURCE_BRANCH#preview/}"
+          echo "Preview: https://asyncband-${profile}.staged.apache.org/" >> "$GITHUB_STEP_SUMMARY"
