@@ -9,19 +9,26 @@
 
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import DocsShell from '$lib/components/DocsShell.svelte';
 
 	let {
 		children,
+		label,
 		title,
 		description,
 		canonical,
-		ogTitle = title
+		ogTitle = title,
+		toc: tocItems = [],
+		standalone = false
 	}: {
 		children: Snippet;
+		label: string;
 		title: string;
 		description: string;
 		canonical: string;
 		ogTitle?: string;
+		toc?: { id: string; label: string }[];
+		standalone?: boolean;
 	} = $props();
 </script>
 
@@ -34,8 +41,22 @@
 	<meta property="og:description" content={description} />
 </svelte:head>
 
-<main id="main-content" class="readme-page">
-	<article class="readme-article">
+{#if standalone}
+	<main id="main-content" class="standalone-page readme-page">
+		<article class="standalone-article doc-article readme-article">
+			{@render children()}
+		</article>
+	</main>
+{:else}
+	<DocsShell {label}>
+		{#snippet toc()}
+			<ul>
+				{#each tocItems as item (item.id)}
+					<li><a href="#{item.id}">{item.label}</a></li>
+				{/each}
+			</ul>
+		{/snippet}
+
 		{@render children()}
-	</article>
-</main>
+	</DocsShell>
+{/if}

@@ -31,6 +31,12 @@ type MarkdownNode = {
 	properties?: Record<string, unknown>;
 };
 
+type MarkdownFile = {
+	data: {
+		fm?: Record<string, unknown>;
+	};
+};
+
 hljs.registerLanguage('bash', bash);
 hljs.registerLanguage('rust', rust);
 
@@ -48,26 +54,43 @@ function slugify(value: string): string {
 		.replace(/^-|-$/g, '');
 }
 
-function addHeadingIds() {
-	return (tree: MarkdownNode) => {
+function collectTableOfContents() {
+	return (tree: MarkdownNode, file: MarkdownFile) => {
+		const toc: { id: string; label: string }[] = [];
 		const identifiers = new Map<string, number>();
+		const headingIds = file.data.fm?.headingIds;
+		const tocLabels = file.data.fm?.tocLabels;
 
 		function visit(node: MarkdownNode) {
-			if (node.type === 'heading' && (node.depth === 2 || node.depth === 3)) {
+			if (node.type === 'heading' && node.depth === 2) {
 				const label = nodeText(node);
-				const base = slugify(label) || 'section';
+				const configuredLabel =
+					typeof tocLabels === 'object' && tocLabels
+						? (tocLabels as Record<string, unknown>)[label]
+						: undefined;
+				const configuredId =
+					typeof headingIds === 'object' && headingIds
+						? (headingIds as Record<string, unknown>)[label]
+						: undefined;
+				const base =
+					typeof configuredId === 'string' && /^[a-z0-9][a-z0-9-]*$/.test(configuredId)
+						? configuredId
+						: slugify(label);
 				const occurrence = (identifiers.get(base) ?? 0) + 1;
 				const id = occurrence === 1 ? base : `${base}-${occurrence}`;
 
 				identifiers.set(base, occurrence);
 				node.data ??= {};
 				node.data.hProperties = { ...node.data.hProperties, id };
+				toc.push({ id, label: typeof configuredLabel === 'string' ? configuredLabel : label });
 			}
 
 			node.children?.forEach(visit);
 		}
 
 		visit(tree);
+		file.data.fm ??= {};
+		file.data.fm.toc = toc;
 	};
 }
 
@@ -113,7 +136,7 @@ const config: MdsvexOptions = {
 	layoutPropForwarding: 'runes',
 	smartypants: false,
 	highlight: { highlighter: highlightCode },
-	remarkPlugins: [addHeadingIds],
+	remarkPlugins: [collectTableOfContents],
 	rehypePlugins: [wrapTables]
 };
 

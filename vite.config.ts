@@ -8,6 +8,7 @@
 import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { mdsvex } from 'mdsvex';
+import sirv from 'sirv';
 import type { PreprocessorGroup } from 'svelte/compiler';
 import { defineConfig } from 'vite';
 import mdsvexConfig from './mdsvex.config.ts';
@@ -24,6 +25,13 @@ const modernizeMdsvexOutput: PreprocessorGroup = {
 
 export default defineConfig({
 	plugins: [
+		{
+			name: 'serve-static-build-preview',
+			configurePreviewServer(server) {
+				// Pagefind writes its bundle after SvelteKit creates the static adapter manifest.
+				server.middlewares.use(sirv('build', { dev: true }));
+			}
+		},
 		sveltekit({
 			extensions: ['.svelte', '.svx'],
 			preprocess: [mdsvex(mdsvexConfig), modernizeMdsvexOutput],

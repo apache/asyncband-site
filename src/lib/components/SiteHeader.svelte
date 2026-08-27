@@ -9,22 +9,31 @@
 
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
+	import SiteSearch from './SiteSearch.svelte';
 </script>
 
 <header class="navbar">
 	<div class="navbar-inner">
-		<a class="navbar-brand" href={resolve('/')} aria-label="Apache Asyncband home">
+		<a class="navbar-brand" href={resolve('/')}>
 			<span>Apache Asyncband</span>
 			<small>Incubating</small>
 		</a>
 
 		<nav class="navbar-links" aria-label="Primary navigation">
-			<a class="external-link" href="https://docs.rs/asyncband/">API Docs</a>
+			<a class:active={page.url.pathname.startsWith('/docs/')} href={resolve('/docs/about/')}
+				>Documentation</a
+			>
+			<a class:active={page.url.pathname === resolve('/downloads/')} href={resolve('/downloads/')}
+				>Downloads</a
+			>
+			<a href="https://docs.rs/asyncband/">API Docs <span aria-hidden="true">↗</span></a>
 			<a
 				class="github-link"
 				href="https://github.com/apache/asyncband"
 				aria-label="GitHub repository"
 			></a>
+			<SiteSearch />
 			<details class="asf-menu">
 				<summary>ASF</summary>
 				<div>
@@ -42,9 +51,10 @@
 		<details class="mobile-menu">
 			<summary aria-label="Open navigation">☰</summary>
 			<nav aria-label="Mobile navigation">
+				<a href={resolve('/docs/about/')}>Documentation</a>
+				<a href={resolve('/downloads/')}>Downloads</a>
 				<a href="https://docs.rs/asyncband/">API docs</a>
 				<a href="https://github.com/apache/asyncband">GitHub</a>
-				<a href="https://www.apache.org/">Apache Software Foundation</a>
 			</nav>
 		</details>
 	</div>
