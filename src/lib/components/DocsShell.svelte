@@ -35,21 +35,6 @@
 				class:active={page.url.pathname === resolve('/docs/about/')}
 				href={resolve('/docs/about/')}>About</a
 			>
-			<a
-				class="sidebar-item"
-				class:active={page.url.pathname === resolve('/docs/getting-started/')}
-				href={resolve('/docs/getting-started/')}>Getting Started</a
-			>
-			<a
-				class="sidebar-item"
-				class:active={page.url.pathname === resolve('/docs/primitives/')}
-				href={resolve('/docs/primitives/')}>Primitives</a
-			>
-			<a
-				class="sidebar-item"
-				class:active={page.url.pathname === resolve('/docs/runtime/')}
-				href={resolve('/docs/runtime/')}>Runtime and Blocking</a
-			>
 			<p class="sidebar-heading">Reference</p>
 			<a class="sidebar-item external" href="https://docs.rs/asyncband/">API documentation</a>
 		</nav>
@@ -67,9 +52,6 @@
 				<summary>Documentation</summary>
 				<nav>
 					<a href={resolve('/docs/about/')}>About</a>
-					<a href={resolve('/docs/getting-started/')}>Getting Started</a>
-					<a href={resolve('/docs/primitives/')}>Primitives</a>
-					<a href={resolve('/docs/runtime/')}>Runtime and Blocking</a>
 				</nav>
 			</details>
 
