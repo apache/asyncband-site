@@ -10,25 +10,9 @@ title: Welcome to Apache Asyncband | Apache Asyncband
 description: Apache Asyncband is a focused collection of composable, runtime-agnostic concurrency building blocks for async Rust.
 canonical: https://asyncband.apache.org/
 ogTitle: Welcome to Apache Asyncband (Incubating)
-standalone: true
 ---
 
 # Welcome to Apache Asyncband (Incubating)
-
-<div class="badges" aria-label="Project status">
-	<a href="https://crates.io/crates/asyncband"><img src="https://img.shields.io/crates/v/asyncband.svg" alt="Crates.io version" /></a>
-	<a href="https://docs.rs/asyncband"><img src="https://docs.rs/asyncband/badge.svg" alt="Documentation status" /></a>
-	<a href="https://www.whatrustisit.com"><img src="https://img.shields.io/badge/MSRV-1.86-green?logo=rust" alt="Minimum supported Rust version 1.86" /></a>
-	<a href="https://github.com/apache/asyncband/blob/main/LICENSE"><img src="https://img.shields.io/crates/l/asyncband" alt="Apache 2.0 license" /></a>
-	<a href="https://github.com/apache/asyncband/actions/workflows/ci.yml"><img src="https://github.com/apache/asyncband/actions/workflows/ci.yml/badge.svg" alt="Build status" /></a>
-</div>
-
-<aside class="project-notice" aria-label="Incubation notice">
-	<strong>Incubation notice</strong>
-	<p>Apache Asyncband (incubating) is an effort undergoing incubation at the Apache Software Foundation (ASF), sponsored by the Apache Incubator PMC.</p>
-	<p>Please read the <a href="https://github.com/apache/asyncband/blob/main/DISCLAIMER">DISCLAIMER</a> and a full explanation of <a href="https://incubator.apache.org/policy/incubation.html">“incubating”</a>.</p>
-	<p><b>Asyncband was formerly published as MEA.</b> The <code>mea</code> crate is deprecated and receives no further development. See the <a href="https://github.com/apache/asyncband/blob/main/MIGRATE.md">migration guide</a> for migration instructions and details about the rename.</p>
-</aside>
 
 ## Overview
 
