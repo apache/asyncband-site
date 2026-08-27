@@ -13,13 +13,11 @@ pnpm dev
 
 The local site is available at `http://localhost:5173/` by default.
 
-Pagefind search is generated from the static HTML during `pnpm build`, so use the production preview below when testing search.
+## Editing the homepage
 
-## Writing documentation
+The site is intentionally a single page. Homepage content lives in `src/routes/+page.svx` and follows the structure of the main Asyncband repository README. Generated Rust API documentation remains external at [docs.rs/asyncband](https://docs.rs/asyncband/).
 
-Documentation pages live under `src/routes/docs/` as MDsveX `.svx` files. Each page starts with frontmatter for its navigation label and metadata; the rest of the file is Markdown.
-
-Second-level headings generate the on-page table of contents automatically. Fenced `bash` and `rust` code blocks are highlighted during the build. MDsveX also supports Svelte components when a document needs behavior beyond Markdown.
+Second- and third-level headings receive stable anchors automatically. Fenced `bash` and `rust` code blocks are highlighted during the build.
 
 ## Validating
 
