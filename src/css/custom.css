@@ -26,6 +26,76 @@
 	--ifm-code-font-size: 95%;
 }
 
+/* Homepage hero */
+.home-hero {
+	padding: 4.5rem 0;
+	text-align: center;
+	background: linear-gradient(180deg, #eef3f8 0%, #ffffff 100%);
+	border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.home-hero__title {
+	margin: 0 0 1rem;
+	font-size: 3rem;
+	letter-spacing: -0.02em;
+}
+
+.home-hero__title small {
+	color: var(--ifm-color-primary);
+	font-size: 0.85rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	vertical-align: middle;
+}
+
+.home-hero__tagline {
+	max-width: 620px;
+	margin: 0 auto 1.75rem;
+	color: var(--ifm-color-emphasis-700);
+	font-size: 1.15rem;
+}
+
+.home-hero__actions {
+	display: flex;
+	gap: 0.75rem;
+	justify-content: center;
+}
+
+/* Homepage feature cards */
+.home-features {
+	margin: 3rem auto 2rem;
+}
+
+.home-features .col {
+	display: flex;
+	margin-bottom: 1rem;
+}
+
+.home-feature {
+	width: 100%;
+	padding: 1.25rem;
+	border: 1px solid var(--ifm-color-emphasis-200);
+	border-radius: 8px;
+}
+
+.home-feature h3 {
+	margin-top: 0;
+	font-size: 1.05rem;
+}
+
+.home-feature p {
+	margin-bottom: 0;
+	font-size: 0.9rem;
+}
+
+/* Homepage prose */
+.home-content {
+	max-width: 760px;
+	margin: 0 auto;
+	padding-bottom: 3rem;
+}
+
 /* Incubating badge next to the project name */
 .navbar__title::after {
 	margin-left: 0.5rem;

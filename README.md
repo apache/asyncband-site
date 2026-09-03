@@ -15,7 +15,7 @@ The local site is available at `http://localhost:3000/` by default.
 
 ## Writing documentation
 
-Pages live under `src/pages/` as Markdown files. The homepage is `src/pages/index.md`. Each page starts with frontmatter for its title and metadata; the rest of the file is Markdown.
+Pages live under `src/pages/`. The homepage is `src/pages/index.tsx`, with its prose content in `src/pages/_home-content.md`. Markdown pages start with frontmatter for their title and metadata; the rest of the file is Markdown.
 
 Fenced `bash` and `rust` code blocks are highlighted during the build. Docusaurus also supports MDX components when a page needs behavior beyond Markdown.
 
