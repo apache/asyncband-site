@@ -4,22 +4,20 @@ This repository contains the source for the Apache Asyncband (Incubating) websit
 
 ## Developing
 
-Install dependencies and start the SvelteKit development server:
+Install dependencies and start the Docusaurus development server:
 
 ```sh
 pnpm install
 pnpm dev
 ```
 
-The local site is available at `http://localhost:5173/` by default.
-
-Pagefind search is generated from the static HTML during `pnpm build`, so use the production preview below when testing search.
+The local site is available at `http://localhost:3000/` by default.
 
 ## Writing documentation
 
-Documentation pages live under `src/routes/docs/` as MDsveX `.svx` files. Each page starts with frontmatter for its navigation label and metadata; the rest of the file is Markdown.
+Pages live under `src/pages/` as Markdown files. The homepage is `src/pages/index.md`. Each page starts with frontmatter for its title and metadata; the rest of the file is Markdown.
 
-Second-level headings generate the on-page table of contents automatically. Fenced `bash` and `rust` code blocks are highlighted during the build. MDsveX also supports Svelte components when a document needs behavior beyond Markdown.
+Fenced `bash` and `rust` code blocks are highlighted during the build. Docusaurus also supports MDX components when a page needs behavior beyond Markdown.
 
 ## Validating
 
