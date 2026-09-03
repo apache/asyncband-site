@@ -5,14 +5,10 @@
 # file to you under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
 # the License at https://www.apache.org/licenses/LICENSE-2.0.
-label: About
-title: Welcome to Apache Asyncband | Apache Asyncband
+title: Welcome to Apache Asyncband (Incubating)
+sidebar_label: About
 description: Apache Asyncband is a runtime-agnostic library providing synchronization and coordination tools for asynchronous Rust programming.
-canonical: https://asyncband.apache.org/docs/about/
-ogTitle: Welcome to Apache Asyncband (Incubating)
 ---
-
-# Welcome to Apache Asyncband (Incubating)
 
 ## Overview
 
@@ -51,22 +47,22 @@ Public paths stay direct—such as `asyncband::mutex`, `asyncband::pool`, and `a
 | Area | API | Feature | Use |
 | --- | --- | --- | --- |
 | Shared state | [`Mutex`](https://docs.rs/asyncband/*/asyncband/mutex/struct.Mutex.html) | `mutex` | Protect shared data with asynchronous mutual exclusion. |
-| | [`RwLock`](https://docs.rs/asyncband/*/asyncband/rwlock/struct.RwLock.html) | `rwlock` | Allow multiple readers or one writer. |
-| | [`Condvar`](https://docs.rs/asyncband/*/asyncband/condvar/struct.Condvar.html) | `condvar` | Wait for notifications while releasing a mutex. |
+|  | [`RwLock`](https://docs.rs/asyncband/*/asyncband/rwlock/struct.RwLock.html) | `rwlock` | Allow multiple readers or one writer. |
+|  | [`Condvar`](https://docs.rs/asyncband/*/asyncband/condvar/struct.Condvar.html) | `condvar` | Wait for notifications while releasing a mutex. |
 | Initialization | [`Once`](https://docs.rs/asyncband/*/asyncband/once/struct.Once.html) | `once` | Run asynchronous initialization exactly once. |
-| | [`OnceCell`](https://docs.rs/asyncband/*/asyncband/once/struct.OnceCell.html) | `once-cell` | Initialize and store one asynchronous value. |
-| | [`LazyCell`](https://docs.rs/asyncband/*/asyncband/once/struct.LazyCell.html) | `once-cell` | Lazily initialize a value with a stored asynchronous function. |
-| | [`OnceMap`](https://docs.rs/asyncband/*/asyncband/once/struct.OnceMap.html) | `once-map` | Initialize and store one value per key. |
+|  | [`OnceCell`](https://docs.rs/asyncband/*/asyncband/once/struct.OnceCell.html) | `once-cell` | Initialize and store one asynchronous value. |
+|  | [`LazyCell`](https://docs.rs/asyncband/*/asyncband/once/struct.LazyCell.html) | `once-cell` | Lazily initialize a value with a stored asynchronous function. |
+|  | [`OnceMap`](https://docs.rs/asyncband/*/asyncband/once/struct.OnceMap.html) | `once-map` | Initialize and store one value per key. |
 | Task coordination | [`Barrier`](https://docs.rs/asyncband/*/asyncband/barrier/struct.Barrier.html) | `barrier` | Wait until all participants reach a synchronization point. |
-| | [`Latch`](https://docs.rs/asyncband/*/asyncband/latch/struct.Latch.html) | `latch` | Wait until a one-way countdown completes. |
-| | [`WaitGroup`](https://docs.rs/asyncband/*/asyncband/waitgroup/struct.WaitGroup.html) | `waitgroup` | Wait for a dynamic group of tasks to finish. |
-| | [`Shutdown`](https://docs.rs/asyncband/*/asyncband/shutdown/struct.Shutdown.html) | `shutdown` | Coordinate shutdown signals and completion. |
+|  | [`Latch`](https://docs.rs/asyncband/*/asyncband/latch/struct.Latch.html) | `latch` | Wait until a one-way countdown completes. |
+|  | [`WaitGroup`](https://docs.rs/asyncband/*/asyncband/waitgroup/struct.WaitGroup.html) | `waitgroup` | Wait for a dynamic group of tasks to finish. |
+|  | [`Shutdown`](https://docs.rs/asyncband/*/asyncband/shutdown/struct.Shutdown.html) | `shutdown` | Coordinate shutdown signals and completion. |
 | Channels | [`oneshot`](https://docs.rs/asyncband/*/asyncband/oneshot/) | `oneshot` | Send one value between two tasks. |
-| | [`mpsc`](https://docs.rs/asyncband/*/asyncband/mpsc/) | `mpsc` | Send each value from multiple producers to one receiver. |
-| | [`broadcast`](https://docs.rs/asyncband/*/asyncband/broadcast/) | `broadcast` | Broadcast values from one or more producers and retain them until every active receiver consumes them. |
+|  | [`mpsc`](https://docs.rs/asyncband/*/asyncband/mpsc/) | `mpsc` | Send each value from multiple producers to one receiver. |
+|  | [`broadcast`](https://docs.rs/asyncband/*/asyncband/broadcast/) | `broadcast` | Broadcast values from one or more producers and retain them until every active receiver consumes them. |
 | Resource reuse | [`pool`](https://docs.rs/asyncband/*/asyncband/pool/) | `pool` | Reuse objects through bounded or unbounded pool variants. |
 | Workload coordination | [`Semaphore`](https://docs.rs/asyncband/*/asyncband/semaphore/struct.Semaphore.html) | `semaphore` | Control concurrent access with permits. |
-| | [`Group`](https://docs.rs/asyncband/*/asyncband/singleflight/struct.Group.html) | `singleflight` | Coalesce concurrent calls for the same key. |
+|  | [`Group`](https://docs.rs/asyncband/*/asyncband/singleflight/struct.Group.html) | `singleflight` | Coalesce concurrent calls for the same key. |
 | Sync interop | [`FutureExt`](https://docs.rs/asyncband/*/asyncband/blocking/trait.FutureExt.html) | `blocking` | Drive one runtime-agnostic future from a blocking thread. |
 
 ## Synchronous interoperability

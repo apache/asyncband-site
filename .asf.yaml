@@ -26,7 +26,7 @@ github:
     wiki: false
   labels:
     - asyncband
-    - sveltekit
+    - docusaurus
     - website
   enabled_merge_buttons:
     squash: true

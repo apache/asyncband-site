@@ -5,16 +5,17 @@
 // use this file except in compliance with the License. You may obtain a copy of
 // the License at https://www.apache.org/licenses/LICENSE-2.0.
 
-// See https://svelte.dev/docs/kit/types#app.d.ts
-// for information about these interfaces
-declare global {
-	namespace App {
-		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
-		// interface PageState {}
-		// interface Platform {}
-	}
-}
+import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
-export {};
+const sidebars: SidebarsConfig = {
+	docs: [
+		'about',
+		{
+			type: 'link',
+			label: 'API documentation',
+			href: 'https://docs.rs/asyncband/'
+		}
+	]
+};
+
+export default sidebars;

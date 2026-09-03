@@ -5,6 +5,5 @@
 	"trailingComma": "none",
 	"printWidth": 100,
 	"proseWrap": "never",
-	"svelte": true,
-	"ignorePatterns": ["**/*.svx", "pnpm-lock.yaml", "static/**"]
+	"ignorePatterns": ["pnpm-lock.yaml", "static/**", "build/**", ".docusaurus/**"]
 }
