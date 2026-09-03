@@ -1,4 +1,7 @@
 {
 	"extends": "@docusaurus/tsconfig",
+	"compilerOptions": {
+		"types": ["node", "@docusaurus/module-type-aliases"]
+	},
 	"exclude": ["node_modules", "build"]
 }

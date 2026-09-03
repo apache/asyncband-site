@@ -27,34 +27,36 @@
 }
 
 /* Homepage hero */
-.hero--home {
-	padding: 4rem 0 2.5rem;
+.home-hero {
+	padding: 4.5rem 0;
 	text-align: center;
-	background: none;
+	background: linear-gradient(180deg, #eef3f8 0%, #ffffff 100%);
+	border-bottom: 1px solid var(--ifm-color-emphasis-200);
 }
 
-.hero--home .hero__title {
-	margin-bottom: 1rem;
-	font-size: 2.8rem;
+.home-hero__title {
+	margin: 0 0 1rem;
+	font-size: 3rem;
 	letter-spacing: -0.02em;
 }
 
-.hero--home .hero__title small {
+.home-hero__title small {
 	color: var(--ifm-color-primary);
-	font-size: 0.8rem;
+	font-size: 0.85rem;
 	font-weight: 700;
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
 	vertical-align: middle;
 }
 
-.hero--home .hero__subtitle {
+.home-hero__tagline {
 	max-width: 620px;
 	margin: 0 auto 1.75rem;
-	font-size: 1.1rem;
+	color: var(--ifm-color-emphasis-700);
+	font-size: 1.15rem;
 }
 
-.hero--home .hero__actions {
+.home-hero__actions {
 	display: flex;
 	gap: 0.75rem;
 	justify-content: center;
@@ -62,7 +64,7 @@
 
 /* Homepage feature cards */
 .home-features {
-	margin: 0 0 1rem;
+	margin: 3rem auto 2rem;
 }
 
 .home-features .col {
@@ -85,6 +87,13 @@
 .home-feature p {
 	margin-bottom: 0;
 	font-size: 0.9rem;
+}
+
+/* Homepage prose */
+.home-content {
+	max-width: 760px;
+	margin: 0 auto;
+	padding-bottom: 3rem;
 }
 
 /* Incubating badge next to the project name */
