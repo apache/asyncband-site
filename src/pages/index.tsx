@@ -5,6 +5,7 @@
 // use this file except in compliance with the License. You may obtain a copy of
 // the License at https://www.apache.org/licenses/LICENSE-2.0.
 
+import MDXContent from '@theme/MDXContent';
 import Layout from '@theme/Layout';
 import type { ReactNode } from 'react';
 import HomeContent from './_home-content.md';
@@ -65,7 +66,9 @@ export default function Home(): ReactNode {
 					</div>
 				</section>
 				<article className="home-content">
-					<HomeContent />
+					<MDXContent>
+						<HomeContent />
+					</MDXContent>
 				</article>
 			</main>
 		</Layout>
