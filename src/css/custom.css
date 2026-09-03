@@ -51,10 +51,6 @@
 	opacity: 0.65;
 }
 
-[data-theme='dark'] .header-github-link::before {
-	filter: brightness(0) invert(1);
-}
-
 /* The ASF logo is dark artwork; invert it on the dark footer */
 .footer--dark img[src*='asf-logo'] {
 	filter: brightness(0) invert(1);

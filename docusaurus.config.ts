@@ -77,7 +77,7 @@ const config: Config = {
 		image: 'og.png',
 		colorMode: {
 			defaultMode: 'light',
-			respectPrefersColorScheme: true
+			disableSwitch: true
 		},
 		navbar: {
 			title: 'Apache Asyncband',
