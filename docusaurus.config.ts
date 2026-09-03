@@ -47,29 +47,12 @@ const config: Config = {
 		[
 			'classic',
 			{
-				docs: {
-					routeBasePath: 'docs',
-					sidebarPath: './sidebars.ts',
-					editUrl: 'https://github.com/apache/asyncband-site/edit/main/docs/'
-				},
+				docs: false,
 				blog: false,
 				theme: {
 					customCss: './src/css/custom.css'
 				}
 			} satisfies PresetOptions
-		]
-	],
-
-	themes: [
-		[
-			'@easyops-cn/docusaurus-search-local',
-			{
-				hashed: true,
-				docsRouteBasePath: ['/docs'],
-				indexPages: true,
-				indexBlog: false,
-				language: ['en']
-			}
 		]
 	],
 
@@ -82,8 +65,8 @@ const config: Config = {
 		navbar: {
 			title: 'Apache Asyncband',
 			items: [
-				{ type: 'doc', docId: 'about', position: 'left', label: 'Documentation' },
 				{ to: '/downloads', label: 'Downloads', position: 'left' },
+				{ href: 'https://docs.rs/asyncband/', label: 'API Docs', position: 'left' },
 				{ type: 'dropdown', label: 'ASF', position: 'right', items: asfLinks },
 				{
 					href: 'https://github.com/apache/asyncband',
@@ -105,7 +88,7 @@ const config: Config = {
 				{
 					title: 'Documentation',
 					items: [
-						{ label: 'About', to: '/docs/about' },
+						{ label: 'About', to: '/' },
 						{ label: 'Downloads', to: '/downloads' },
 						{ label: 'API documentation', href: 'https://docs.rs/asyncband/' }
 					]

@@ -13,13 +13,11 @@ pnpm dev
 
 The local site is available at `http://localhost:3000/` by default.
 
-The search index is generated during `pnpm build`, so use the production preview below when testing search.
-
 ## Writing documentation
 
-Documentation pages live under `docs/` as Markdown files. Each page starts with frontmatter for its title and metadata; the rest of the file is Markdown.
+Pages live under `src/pages/` as Markdown files. The homepage is `src/pages/index.md`. Each page starts with frontmatter for its title and metadata; the rest of the file is Markdown.
 
-The on-page table of contents is generated from headings automatically. Fenced `bash` and `rust` code blocks are highlighted during the build. Docusaurus also supports MDX components when a document needs behavior beyond Markdown.
+Fenced `bash` and `rust` code blocks are highlighted during the build. Docusaurus also supports MDX components when a page needs behavior beyond Markdown.
 
 ## Validating
 
