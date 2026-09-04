@@ -13,13 +13,13 @@ description: Apache Asyncband (Incubating) release downloads.
 
 :::info First Apache Incubator release forthcoming
 
-Apache Asyncband (Incubating) has not yet published an Apache Incubator release. The first source release, its signature, checksum, and signing keys will be listed here after it is approved by both the Asyncband PPMC and the Apache Incubator PMC.
+Apache Asyncband (Incubating) has not yet published an Apache Incubator release. The first source release, its signature, checksum, and signing keys will be listed here when available.
 
 :::
 
 ## Releases
 
-Official Apache Asyncband (Incubating) releases will be provided as source archives. Incubator policy requires `incubating` in every release archive filename, for example `apache-asyncband-<version>-incubating-src.tar.gz`. Each archive must contain `LICENSE`, `NOTICE`, and `DISCLAIMER` (or, where applicable, `DISCLAIMER-WIP`) files.
+Apache Asyncband (Incubating) releases will be provided as source archives.
 
 Each release entry will include links to the source archive, its detached OpenPGP signature (`.asc`), its SHA-512 checksum (`.sha512`), and the Apache Asyncband (Incubating) `KEYS` file. Older releases will remain available under `incubator/asyncband/` in the [Apache archive](https://archive.apache.org/dist/).
 
@@ -42,4 +42,4 @@ Verify the SHA-512 checksum:
 shasum -a 512 -c apache-asyncband-<version>-incubating-src.tar.gz.sha512
 ```
 
-See [Verifying Apache Software Foundation Releases](https://www.apache.org/info/verification.html) for details about checking signatures, checksums, and signing-key fingerprints. The [Incubator release management guide](https://incubator.apache.org/guides/releasemanagement.html) describes the additional requirements for podling releases.
+See [Verifying Apache Software Foundation Releases](https://www.apache.org/info/verification.html) for details about checking signatures, checksums, and signing-key fingerprints.
