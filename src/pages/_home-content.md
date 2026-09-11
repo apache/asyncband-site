@@ -1,12 +1,3 @@
-<!--
- Licensed to the Apache Software Foundation (ASF) under one or more contributor
- license agreements. See the NOTICE file distributed with this work for
- additional information regarding copyright ownership. The ASF licenses this
- file to you under the Apache License, Version 2.0 (the "License"); you may not
- use this file except in compliance with the License. You may obtain a copy of
- the License at https://www.apache.org/licenses/LICENSE-2.0.
--->
-
 ## Overview
 
 Asyncband is a focused collection of composable, runtime-agnostic concurrency building blocks for async Rust. It provides synchronization, initialization, task coordination, channels, resource reuse, and workload control without choosing an executor for the application.
@@ -37,7 +28,7 @@ async fn increment() {
 }
 ```
 
-Public paths stay direct—such as `asyncband::mutex`, `asyncband::pool`, and `asyncband::once::OnceCell`—while Cargo features keep unused implementations out of the build.
+Public paths stay direct while Cargo features keep unused implementations out of the build.
 
 ## API map
 
