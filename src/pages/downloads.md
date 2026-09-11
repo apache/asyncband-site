@@ -19,7 +19,7 @@ Apache Asyncband (Incubating) releases are provided as source archives. The late
 | --- | --- | --- | --- |
 | 0.7.2 | [apache-asyncband-0.7.2-incubating-src.tar.gz](https://www.apache.org/dyn/closer.lua/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz) | [ASC](https://downloads.apache.org/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz.asc) | [SHA-512](https://downloads.apache.org/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz.sha512) |
 
-Older releases will remain available under `incubator/asyncband/` in the [Apache archive](https://archive.apache.org/dist/).
+Older releases are available from the [Apache archive](https://archive.apache.org/dist/incubator/asyncband/).
 
 The latest development source is available from the [Apache Asyncband repository](https://github.com/apache/asyncband). Git branches, tags, and packages obtained from other services are not Apache Asyncband (Incubating) releases.
 
