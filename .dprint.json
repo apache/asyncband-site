@@ -1,0 +1,11 @@
+{
+	"$schema": "https://dprint.dev/schemas/v0.json",
+	"markdown": {
+		"textWrap": "never",
+		"list.unorderedMarker": "asterisks",
+		"table.skipFormat": false
+	},
+	"includes": ["**/*.md"],
+	"excludes": ["**/node_modules", "static/**", "build/**", ".docusaurus/**"],
+	"plugins": ["./node_modules/@dprint/markdown/plugin.wasm"]
+}

@@ -19,6 +19,8 @@ Pages live under `src/pages/`. The homepage is `src/pages/index.tsx`, with its p
 
 Fenced `bash` and `rust` code blocks are highlighted during the build. Docusaurus also supports MDX components when a page needs behavior beyond Markdown.
 
+Run `pnpm format` to format the repository. Markdown (`.md`) files use dprint with `*` list markers, aligned table columns, and one source line per paragraph or list item. Oxfmt formats the remaining supported files. Use the dprint editor integration to apply the Markdown style on save.
+
 ## Validating
 
 Run the type, formatting, lint, and production-build checks:

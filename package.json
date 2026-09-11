@@ -14,8 +14,8 @@
 		"build": "docusaurus build",
 		"preview": "docusaurus serve",
 		"check": "tsc",
-		"lint": "oxlint --deny-warnings && oxfmt --check .",
-		"format": "oxfmt .",
+		"lint": "oxlint --deny-warnings && oxfmt --check . && dprint check",
+		"format": "oxfmt . && dprint fmt",
 		"validate": "pnpm check && pnpm lint && pnpm build"
 	},
 	"dependencies": {
@@ -29,7 +29,9 @@
 		"@docusaurus/module-type-aliases": "^3.10.2",
 		"@docusaurus/tsconfig": "^3.10.2",
 		"@docusaurus/types": "^3.10.2",
+		"@dprint/markdown": "^0.23.3",
 		"@types/node": "^24",
+		"dprint": "^0.57.4",
 		"oxfmt": "^0.64.0",
 		"oxlint": "^1.79.0",
 		"typescript": "~5.9.3"
