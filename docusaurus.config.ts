@@ -13,7 +13,7 @@ const asfLinks = [
 ];
 
 const config: Config = {
-	title: 'Apache Asyncband',
+	title: 'Apache Asyncband (Incubating)',
 	tagline:
 		'Runtime-agnostic synchronization and coordination tools for asynchronous Rust programming',
 	favicon: 'favicon.svg',
