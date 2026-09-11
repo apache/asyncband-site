@@ -1,8 +1,8 @@
-# See https://github.com/apache/infrastructure-asfyaml/ for the configuration reference.
+# See https://github.com/apache/infrastructure-asfyaml for the configuration reference.
 
 github:
   description: Apache Asyncband (Incubating) Website
-  homepage: https://asyncband.apache.org/
+  homepage: https://asyncband.apache.org
   features:
     issues: true
     projects: false
