@@ -15,9 +15,9 @@ description: Apache Asyncband (Incubating) release downloads.
 
 Apache Asyncband (Incubating) releases are provided as source archives. The latest release is **0.7.2**, the first Apache Incubator release.
 
-| Version | Source archive | Signature | Checksum | Signing keys |
-| --- | --- | --- | --- | --- |
-| 0.7.2 | [apache-asyncband-0.7.2-incubating-src.tar.gz](https://www.apache.org/dyn/closer.lua/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz) | [ASC](https://downloads.apache.org/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz.asc) | [SHA-512](https://downloads.apache.org/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz.sha512) | [KEYS](https://downloads.apache.org/incubator/asyncband/KEYS) |
+| Version | Source archive | Signature | Checksum |
+| --- | --- | --- | --- |
+| 0.7.2 | [apache-asyncband-0.7.2-incubating-src.tar.gz](https://www.apache.org/dyn/closer.lua/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz) | [ASC](https://downloads.apache.org/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz.asc) | [SHA-512](https://downloads.apache.org/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz.sha512) |
 
 Older releases will remain available under `incubator/asyncband/` in the [Apache archive](https://archive.apache.org/dist/).
 
@@ -25,7 +25,7 @@ The latest development source is available from the [Apache Asyncband repository
 
 ## Verify a release
 
-Every Apache Asyncband (Incubating) release must be verified before use. Download the source archive and its matching `.asc` and `.sha512` files, together with the `KEYS` file linked from the release entry. Signatures, checksums, and keys should be downloaded from the official Apache distribution site, even when the source archive is served by a mirror.
+Every Apache Asyncband (Incubating) release must be verified before use. Download the source archive and its matching `.asc` and `.sha512` files, together with the project's [KEYS](https://downloads.apache.org/incubator/asyncband/KEYS) file, which contains the public keys used to sign releases. Signatures, checksums, and keys should be downloaded from the official Apache distribution site, even when the source archive is served by a mirror.
 
 Import the release signing keys and verify the detached signature:
 
