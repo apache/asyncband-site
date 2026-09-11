@@ -1,7 +1,5 @@
 ## Overview
 
-Apache Asyncband (Incubating) is a focused collection of composable, runtime-agnostic concurrency building blocks for async Rust. It provides synchronization, initialization, task coordination, channels, resource reuse, and workload control without choosing an executor for the application.
-
 Asyncband's async APIs are built on standard futures and wakers. The library does not spawn tasks, own worker threads, install timers, or require a reactor or I/O driver. Applications can poll its futures with Tokio, async-std, smol, a custom executor, or any other standards-based runtime, and compose runtime services such as deadlines around them.
 
 ### Project scope
