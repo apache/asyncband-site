@@ -5,15 +5,17 @@ import HomeContent from './_home-content.md';
 
 export default function Home(): ReactNode {
 	return (
-		<Layout description="Apache Asyncband is a runtime-agnostic library providing synchronization and coordination tools for asynchronous Rust programming.">
+		<Layout description="Apache Asyncband (Incubating) is a runtime-agnostic library providing synchronization and coordination tools for asynchronous Rust programming.">
 			<header className="home-hero">
 				<div className="container">
 					<h1 className="home-hero__title">
-						Apache Asyncband <small>(Incubating)</small>
+						Composable synchronization and coordination primitives for Async Rust
 					</h1>
 					<p className="home-hero__tagline">
-						Runtime-agnostic synchronization and coordination tools for asynchronous Rust
-						programming.
+						Apache Asyncband (Incubating) is a focused collection of composable, runtime-agnostic
+						concurrency building blocks for Async Rust. It provides synchronization, initialization,
+						task coordination, channels, resource reuse, and workload control without choosing an
+						executor for the application.
 					</p>
 					<div className="home-hero__actions">
 						<a className="button button--primary button--lg" href="#getting-started">
