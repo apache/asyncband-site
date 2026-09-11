@@ -20,7 +20,7 @@ You can verify the integrity of a downloaded release using the PGP signatures an
 
 Apache Asyncband (Incubating) releases are provided as source archives. The latest release is **0.7.2**, the first Apache Incubator release.
 
-* Current release: [apache-asyncband-0.7.2-incubating-src.tar.gz](https://www.apache.org/dyn/closer.lua/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz)
-* PGP: [apache-asyncband-0.7.2-incubating-src.tar.gz.asc](https://downloads.apache.org/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz.asc)
-* SHA-512: [apache-asyncband-0.7.2-incubating-src.tar.gz.sha512](https://downloads.apache.org/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz.sha512)
-* Keys: [KEYS](https://downloads.apache.org/incubator/asyncband/KEYS)
+- Current release: [apache-asyncband-0.7.2-incubating-src.tar.gz](https://www.apache.org/dyn/closer.lua/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz)
+- PGP: [apache-asyncband-0.7.2-incubating-src.tar.gz.asc](https://downloads.apache.org/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz.asc)
+- SHA-512: [apache-asyncband-0.7.2-incubating-src.tar.gz.sha512](https://downloads.apache.org/incubator/asyncband/apache-asyncband-0.7.2-incubating-src.tar.gz.sha512)
+- Keys: [KEYS](https://downloads.apache.org/incubator/asyncband/KEYS)

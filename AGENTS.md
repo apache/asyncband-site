@@ -10,7 +10,3 @@
 - Open the pull request from `preview/<name>` into `main` and include the staging URL in the pull request description.
 - When the pull request is closed, the cleanup workflow deletes the `site/<name>-staging` branch so deployment output does not accumulate. The staged preview may remain reachable until ASF infrastructure prunes it. To remove a stale staging branch by hand, delete its `site/<name>-staging` branch.
 - Production publishing remains separate: pushes to `main` publish through the `asf-site` branch.
-
-## Documentation
-
-Keep each Markdown prose paragraph and list item on one source line. Format Markdown tables so their columns and separators align in the source.
