@@ -41,7 +41,7 @@ const config: Config = {
 			'classic',
 			{
 				docs: false,
-				blog: false,
+				blog: {},
 				theme: {
 					customCss: './src/css/custom.css'
 				}
@@ -59,6 +59,7 @@ const config: Config = {
 			title: 'Apache Asyncband',
 			items: [
 				{ to: '/downloads', label: 'Downloads', position: 'left' },
+				{ to: '/blog', label: 'Blog', position: 'left' },
 				{ href: 'https://docs.rs/asyncband/', label: 'API Docs', position: 'left' },
 				{ type: 'dropdown', label: 'ASF', position: 'right', items: asfLinks },
 				{
