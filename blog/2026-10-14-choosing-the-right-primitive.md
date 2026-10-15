@@ -5,7 +5,11 @@ authors: [nanami]
 tags: [async rust, concurrency]
 ---
 
-Asyncband ships a wide box of coordination primitives: locks, channels, latches, pools. Wide enough that the daily question is rarely "how do I use X" but "which X is this job". This post walks the three you will reach for most often — [`Semaphore`](https://docs.rs/asyncband/*/asyncband/semaphore/struct.Semaphore.html), [`ManualResetEvent`](https://docs.rs/asyncband/*/asyncband/event/struct.ManualResetEvent.html), and [`AutoResetEvent`](https://docs.rs/asyncband/*/asyncband/event/struct.AutoResetEvent.html) — through one question: **what is the unit of coordination?** A permit to count, a level to observe, or an edge to consume.
+_This post is written against asyncband 0.7 (links point to the 0.7.3 docs); the crate is still pre-1.0, so later versions may require some adjustment._
+
+Asyncband ships a wide box of coordination primitives: locks, channels, latches, pools. Wide enough that the daily question is rarely "how do I use X" but "which X is this job". This post walks the three you will reach for most often — [`Semaphore`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html), [`ManualResetEvent`](https://docs.rs/asyncband/0.7.3/asyncband/event/struct.ManualResetEvent.html), and [`AutoResetEvent`](https://docs.rs/asyncband/0.7.3/asyncband/event/struct.AutoResetEvent.html) — through one question: **what is the unit of coordination?** A permit to count, a level to observe, or an edge to consume.
+
+<!-- truncate -->
 
 ## Count when you bound work
 
@@ -29,8 +33,8 @@ The returned guard is the whole accounting story: acquire to enter, drop to leav
 
 When your condition is not a number but a _fact_, counting permits is the wrong shape. Asyncband's events come in the two classic flavors, and the difference is how they treat state:
 
-* [`ManualResetEvent`](https://docs.rs/asyncband/*/asyncband/event/struct.ManualResetEvent.html) is a _level_. `set` releases every registered waiter and stays set — future waits pass immediately — until an explicit `reset`. Use it as a readiness gate: configuration loaded, connection established, shutdown initiated.
-* [`AutoResetEvent`](https://docs.rs/asyncband/*/asyncband/event/struct.AutoResetEvent.html) is an _edge_. Each `set` delivers one signal to one waiter; if nobody is waiting, one signal is retained. Bursts coalesce: three sets with no consumer in between leave one stored signal, not three.
+* [`ManualResetEvent`](https://docs.rs/asyncband/0.7.3/asyncband/event/struct.ManualResetEvent.html) is a _level_. `set` releases every registered waiter and stays set — future waits pass immediately — until an explicit `reset`. Use it as a readiness gate: configuration loaded, connection established, shutdown initiated.
+* [`AutoResetEvent`](https://docs.rs/asyncband/0.7.3/asyncband/event/struct.AutoResetEvent.html) is an _edge_. Each `set` delivers one signal to one waiter; if nobody is waiting, one signal is retained. Bursts coalesce: three sets with no consumer in between leave one stored signal, not three.
 
 The clearest way to feel the difference is a workload that screams "queue" at first glance: a single worker that rebuilds a snapshot whenever a new revision is requested. Revisions arrive in bursts, but only the latest one matters — processing each intermediate revision would be wasted work. That rules out a channel: a channel's contract is that every sent value is delivered, which is exactly the work you want to _avoid_. A `ManualResetEvent` is also wrong: it would wake every consumer and stay set until reset, which is the wrong granularity for "something changed, re-check once".
 
@@ -89,7 +93,7 @@ match tokio::time::timeout(Duration::from_secs(1), sem.acquire(5)).await {
 }
 ```
 
-**`drain_permits` and `reduce_permits` shrink by different rules.** [`drain_permits(n)`](https://docs.rs/asyncband/*/asyncband/semaphore/struct.Semaphore.html#method.drain_permits) removes up to `n` _currently available_ permits and never creates a deficit; [`reduce_permits(n)`](https://docs.rs/asyncband/*/asyncband/semaphore/struct.Semaphore.html#method.reduce_permits) removes exactly `n`, consuming future releases when fewer are available — those releases repay the deficit before any queued acquisition proceeds. Drain when you observe; reduce when you permanently remove capacity.
+**`drain_permits` and `reduce_permits` shrink by different rules.** [`drain_permits(n)`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html#method.drain_permits) removes up to `n` _currently available_ permits and never creates a deficit; [`reduce_permits(n)`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html#method.reduce_permits) removes exactly `n`, consuming future releases when fewer are available — those releases repay the deficit before any queued acquisition proceeds. Drain when you observe; reduce when you permanently remove capacity.
 
 ## Where to go next
 
