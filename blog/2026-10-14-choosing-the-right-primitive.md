@@ -97,4 +97,4 @@ match tokio::time::timeout(Duration::from_secs(1), sem.acquire(5)).await {
 
 ## Where to go next
 
-The [API documentation](https://docs.rs/asyncband/) covers each primitive's ordering, cancellation, and memory-model contracts in detail, and the [examples crate](https://github.com/apache/asyncband/tree/main/examples) demonstrates the patterns above as complete runnable programs. Coming from Tokio? The [migration guide](https://github.com/apache/asyncband/blob/main/MIGRATE.md) maps the familiar names onto their asyncband counterparts.
+The [API documentation](https://docs.rs/asyncband/) covers each primitive's ordering, cancellation, and memory-model contracts in detail, and the [examples crate](https://github.com/apache/asyncband/tree/main/examples) demonstrates the patterns above as complete runnable programs.
