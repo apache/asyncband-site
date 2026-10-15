@@ -21,7 +21,6 @@ const config: Config = {
 	url: 'https://asyncband.apache.org',
 	baseUrl: '/',
 	trailingSlash: true,
-	staticDirectories: ['static', '.docusaurus/blog-authors/static'],
 
 	onBrokenLinks: 'throw',
 
@@ -37,14 +36,14 @@ const config: Config = {
 		locales: ['en']
 	},
 
+	plugins: ['./plugins/blog.ts'],
+
 	presets: [
 		[
 			'classic',
 			{
 				docs: false,
-				blog: {
-					authorsMapPath: '../.docusaurus/blog-authors/authors.json'
-				},
+				blog: false,
 				theme: {
 					customCss: './src/css/custom.css'
 				}
