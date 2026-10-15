@@ -200,6 +200,9 @@ importers:
       dprint:
         specifier: ^0.57.4
         version: 0.57.4
+      js-yaml:
+        specifier: ^4.3.2
+        version: 4.3.2
       oxfmt:
         specifier: ^0.64.0
         version: 0.64.0(svelte@5.56.10)

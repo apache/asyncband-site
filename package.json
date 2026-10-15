@@ -10,13 +10,14 @@
 		"url": "https://github.com/apache/asyncband-site.git"
 	},
 	"scripts": {
-		"dev": "docusaurus start",
-		"build": "docusaurus build",
+		"dev": "node scripts/prepare-authors.mjs && docusaurus start",
+		"build": "node scripts/prepare-authors.mjs && docusaurus build",
 		"preview": "docusaurus serve",
 		"check": "tsc",
+		"test": "node --test scripts/*.test.mjs",
 		"lint": "oxlint --deny-warnings && oxfmt --check . && dprint check",
 		"format": "oxfmt . && dprint fmt",
-		"validate": "pnpm check && pnpm lint && pnpm build"
+		"validate": "pnpm check && pnpm test && pnpm lint && pnpm build"
 	},
 	"dependencies": {
 		"@docusaurus/core": "^3.10.2",
@@ -32,6 +33,7 @@
 		"@dprint/markdown": "^0.23.3",
 		"@types/node": "^24",
 		"dprint": "^0.57.4",
+		"js-yaml": "^4.3.2",
 		"oxfmt": "^0.64.0",
 		"oxlint": "^1.79.0",
 		"typescript": "~5.9.3"
