@@ -21,6 +21,10 @@ Fenced `bash` and `rust` code blocks are highlighted during the build. Docusauru
 
 Run `pnpm format` to format the repository.
 
+## Writing blog posts
+
+Blog posts live under `blog/`, with author profiles in `blog/authors.yml`. Store author avatars in `static/avatars/` and reference them with a root-relative `image_url`, such as `/avatars/nanami.png`. Serving avatars from the site keeps them compatible with the [ASF Content Security Policy](https://infra.apache.org/csp.html), which blocks external images such as GitHub avatars. To update an avatar, replace its local file.
+
 ## Validating
 
 Run the type, formatting, lint, and production-build checks:
