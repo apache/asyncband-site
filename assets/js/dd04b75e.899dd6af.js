@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkasyncband_site=self.webpackChunkasyncband_site||[]).push([[672],{3024(a){a.exports=JSON.parse('{"authors":[{"name":"Nanami","title":"Asyncband Contributor","url":"https://github.com/nanami-0713","imageURL":"https://github.com/nanami-0713.png","key":"nanami","page":null,"count":1}]}')}}]);

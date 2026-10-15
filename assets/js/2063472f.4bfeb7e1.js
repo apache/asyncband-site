@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkasyncband_site=self.webpackChunkasyncband_site||[]).push([[215],{7646(s){s.exports=JSON.parse('{"tags":[{"label":"async rust","permalink":"/blog/tags/async-rust","count":1},{"label":"concurrency","permalink":"/blog/tags/concurrency","count":1}]}')}}]);
