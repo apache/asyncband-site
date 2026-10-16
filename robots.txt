@@ -1,0 +1,3 @@
+# Allow crawling the public project website.
+User-agent: *
+Allow: /
