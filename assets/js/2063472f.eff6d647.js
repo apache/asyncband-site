@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkasyncband_site=self.webpackChunkasyncband_site||[]).push([[215],{7646(a){a.exports=JSON.parse('{"tags":[{"label":"migration","permalink":"/blog/tags/migration","count":1},{"label":"tokio","permalink":"/blog/tags/tokio","count":1},{"label":"semaphore","permalink":"/blog/tags/semaphore","count":1}]}')}}]);
