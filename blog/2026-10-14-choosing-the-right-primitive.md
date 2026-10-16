@@ -1,100 +1,119 @@
 ---
-title: "Counting, Signaling, and Cancelling: Choosing the Right Asyncband Primitive"
-description: "A field guide to picking between Semaphore, ManualResetEvent, and AutoResetEvent, and the sharp edges worth knowing before you rely on them."
-authors: [nanami]
+title: "Using Semaphores to Control In-Flight Work"
+description: "Use Asyncband's Semaphore to share concurrency limits, keep permits with the resources they account for, and reserve capacity for work of different sizes."
+authors: [nanami, tison]
 tags: [async rust, concurrency]
 ---
 
-_This post is written against asyncband 0.7 (links point to the 0.7.3 docs); the crate is still pre-1.0, so later versions may require some adjustment._
+An asynchronous program can start work faster than the resources behind it can handle. Downloads compete for connections and bandwidth. Background jobs compete for CPU time. Buffered data occupies memory until its consumer finishes with it. A semaphore gives these operations a shared budget: work acquires permits before consuming capacity and returns them when that capacity becomes available again.
 
-Asyncband ships a wide box of coordination primitives: locks, channels, latches, pools. Wide enough that the daily question is rarely "how do I use X" but "which X is this job". This post walks the three you will reach for most often — [`Semaphore`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html), [`ManualResetEvent`](https://docs.rs/asyncband/0.7.3/asyncband/event/struct.ManualResetEvent.html), and [`AutoResetEvent`](https://docs.rs/asyncband/0.7.3/asyncband/event/struct.AutoResetEvent.html) — through one question: **what is the unit of coordination?** A permit to count, a level to observe, or an edge to consume.
+The useful questions are **what one permit represents, which operations share the budget, and how long each operation holds its permits**. This post works through those choices with Asyncband's [`Semaphore`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html), including how Apache OpenDAL and prek use it.
 
 <!-- truncate -->
 
-## Count when you bound work
+_The Asyncband APIs below are from version 0.7.3, with the `semaphore` feature enabled. The HTTP example uses reqwest; the semaphore itself is runtime-independent._
 
-A semaphore's state is a _number_. You reach for it when your condition is "no more than N of these at once": concurrent requests against one backend, buffers in flight, tasks sharing a scarce resource.
+## Share a budget across operations
+
+Suppose a client should perform at most eight downloads at once. Create one `Semaphore::new(8)` and share it across the calls that consume that budget. Each download acquires one permit. When all eight are held, another acquisition waits asynchronously until capacity becomes available.
 
 ```rust
 use asyncband::semaphore::Semaphore;
 
-async fn handle(socket: Socket, limiter: &Semaphore) {
-    // At most `limiter` handlers run at once; the others wait
-    // without blocking a thread.
-    let _permit = limiter.acquire(1).await;
-    socket.serve().await;
-    // Dropping the permit releases it, and the next waiter proceeds.
+async fn download(
+    client: &reqwest::Client,
+    slots: &Semaphore,
+    url: &str,
+) -> Result<Vec<u8>, reqwest::Error> {
+    let _permit = slots.acquire(1).await;
+    let response = client.get(url).send().await?.error_for_status()?;
+    Ok(response.bytes().await?.to_vec())
 }
 ```
 
-The returned guard is the whole accounting story: acquire to enter, drop to leave, and the count stays consistent even if a task panics or is cancelled mid-work.
+`acquire` returns a guard. Keeping that guard in `_permit` holds the slot through the download, including reading the response body. Returning from the function drops the guard and gives the slot back, including on an error. There is no separate success or error branch that needs to release it manually.
 
-## Signal when you notify
+The semaphore must live outside the individual calls. Creating a new semaphore inside `download` would give every call its own eight-slot budget. An `Arc<Semaphore>` lets independently owned tasks share the same budget; each task can borrow it for `acquire` or use `acquire_owned` when the permit itself must own a reference to the semaphore.
 
-When your condition is not a number but a _fact_, counting permits is the wrong shape. Asyncband's events come in the two classic flavors, and the difference is how they treat state:
+This is useful when work comes from several places. Apache OpenDAL's [`ConcurrentLimitLayer`](https://github.com/apache/opendal/blob/ee8be2353d6af6152f6293cb8ac0b4d3d7a234d7/core/layers/concurrent-limit/src/lib.rs) lets multiple operators share an Asyncband semaphore. The hook runner [prek](https://github.com/j178/prek/blob/735c452028a698ce99ae5821dda9baedd0e07037/crates/prek/src/cli/run/run.rs) similarly passes one semaphore through project runs to limit concurrent hook execution. The scope of the shared semaphore determines the scope of the limit.
 
-* [`ManualResetEvent`](https://docs.rs/asyncband/0.7.3/asyncband/event/struct.ManualResetEvent.html) is a _level_. `set` releases every registered waiter and stays set — future waits pass immediately — until an explicit `reset`. Use it as a readiness gate: configuration loaded, connection established, shutdown initiated.
-* [`AutoResetEvent`](https://docs.rs/asyncband/0.7.3/asyncband/event/struct.AutoResetEvent.html) is an _edge_. Each `set` delivers one signal to one waiter; if nobody is waiting, one signal is retained. Bursts coalesce: three sets with no consumer in between leave one stored signal, not three.
+Eight slots limit simultaneous downloads. The number completed per second still depends on their duration. A policy expressed in requests per second needs a time-based rate limiter.
 
-The clearest way to feel the difference is a workload that screams "queue" at first glance: a single worker that rebuilds a snapshot whenever a new revision is requested. Revisions arrive in bursts, but only the latest one matters — processing each intermediate revision would be wasted work. That rules out a channel: a channel's contract is that every sent value is delivered, which is exactly the work you want to _avoid_. A `ManualResetEvent` is also wrong: it would wake every consumer and stay set until reset, which is the wrong granularity for "something changed, re-check once".
+## Keep the permit with the resource
 
-An `AutoResetEvent` plus an atomic for the latest revision fits:
+In the example above, the download ends when the response body has been read. A streaming API has a different lifetime: it can return a response while the caller is still receiving its body. Releasing a permit when the response is returned would leave that later transfer outside the budget.
+
+OpenDAL handles this at its [HTTP transport boundary](https://github.com/apache/opendal/blob/ee8be2353d6af6152f6293cb8ac0b4d3d7a234d7/core/layers/concurrent-limit/src/lib.rs#L191). When an HTTP concurrency limit is configured, it acquires a permit before sending the request and moves the permit into a wrapper around the response body stream. The stream holds the permit until it is dropped. If sending the request fails, the local permit is dropped instead.
+
+That ownership pattern also applies to a returned buffer or a queued job: put the permit in the object that owns the charged resource. If ownership moves to another task, move the permit with it. The function that acquired the permit may return long before the resource is released.
+
+The download example's returned `Vec<u8>` illustrates the boundary. Its slot covers the transfer, but the caller can retain the downloaded bytes afterward. Limiting transfers alone does not bound retained memory.
+
+## Charge for the size of the work
+
+A permit can represent a byte of capacity instead of one operation. This matters when a small buffer and a large buffer should consume different amounts of a shared budget.
+
+Here is a standalone example of a fixed payload budget. It reserves capacity before allocating a buffer and keeps the reservation with the returned value:
 
 ```rust
-use std::sync::atomic::AtomicUsize;
-use std::sync::atomic::Ordering;
+use std::sync::Arc;
 
-use asyncband::event::AutoResetEvent;
+use asyncband::semaphore::{OwnedSemaphorePermit, Semaphore};
 
-struct Rebuilder {
-    requested: AtomicUsize,
-    changed: AutoResetEvent,
+struct BufferBudget {
+    capacity: usize,
+    available: Arc<Semaphore>,
 }
 
-impl Rebuilder {
-    fn request(&self, revision: usize) {
-        self.requested.fetch_max(revision, Ordering::Release);
-        self.changed.set();
-    }
+struct BudgetedBuffer {
+    data: Vec<u8>,
+    _permit: OwnedSemaphorePermit,
+}
 
-    async fn run(&self) {
-        let mut rebuilt = 0;
-        loop {
-            let requested = self.requested.load(Ordering::Acquire);
-            if requested != rebuilt {
-                rebuild(requested).await; // a burst of 1, 2, 3 coalesces into "rebuild 3"
-                rebuilt = requested;
-            }
-            self.changed.wait().await;
+impl BufferBudget {
+    fn new(capacity: usize) -> Self {
+        Self {
+            capacity,
+            available: Arc::new(Semaphore::new(capacity)),
         }
     }
-}
-```
 
-Many producers call `request`; one consumer wakes, observes the _latest_ state, and sleeps again. A signal that arrives between the state check and the wait is retained, so the worker cannot miss a change, and a leftover signal costs at most one extra predicate check. (This pattern is adapted from the `coalesced_worker` example in the [asyncband repository](https://github.com/apache/asyncband/tree/main/examples) — worth a read in full.)
+    async fn allocate(&self, len: usize) -> Option<BudgetedBuffer> {
+        if len > self.capacity {
+            return None;
+        }
 
-## The sharp edges of counting
-
-Semaphores look like the simplest primitive in the box, and most of the time they are. Four behaviors are worth internalizing before you build on them — all verified against the current implementation:
-
-**An acquisition larger than the semaphore can ever grant never completes.** Permits arrive only when someone releases them. `acquire(5)` against a semaphore initialized with 3 and never topped up waits forever. Unlike a channel, there is no "closed" state that fails the wait; the caller owns the timeout.
-
-**Pending acquisitions complete in request order, and a big one at the head holds back smaller ones behind it.** Permits are assigned to the queue head first. A partially satisfied `acquire(100)` keeps its place in line, so a stream of `acquire(1)` callers queued behind it waits until the big acquisition completes. This is fair — nobody jumps the line, and `try_acquire` cannot steal a handoff already assigned to a waiter — but if you mix sizes on one semaphore, mind the ordering interaction. One semaphore per size class avoids the coupling entirely.
-
-**Cancelling a pending acquisition passes its credit forward.** Wrap `acquire` in a timeout or `select!` and the cancelled future returns the permits _already assigned to it_ to the next queued waiters — not to the available count. Nothing is lost and nothing leaks; the place in line is what you give up. So a timeout like this is always safe on the semaphore side:
-
-```rust
-match tokio::time::timeout(Duration::from_secs(1), sem.acquire(5)).await {
-    Ok(permit) => serve(permit).await,
-    Err(_elapsed) => {
-        // Any of the 5 permits already credited to us went to the
-        // next waiter, not back to the pool. Nothing leaked.
+        let permit = self.available.clone().acquire_owned(len).await;
+        Some(BudgetedBuffer {
+            data: vec![0; len],
+            _permit: permit,
+        })
     }
 }
 ```
 
-**`drain_permits` and `reduce_permits` shrink by different rules.** [`drain_permits(n)`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html#method.drain_permits) removes up to `n` _currently available_ permits and never creates a deficit; [`reduce_permits(n)`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html#method.reduce_permits) removes exactly `n`, consuming future releases when fewer are available — those releases repay the deficit before any queued acquisition proceeds. Drain when you observe; reduce when you permanently remove capacity.
+With `BufferBudget::new(8 * 1024 * 1024)`, the budget covers eight MiB of payload. A 64 KiB allocation charges 64 KiB; a two MiB allocation charges two MiB. The buffer and its reservation can move together between tasks. Dropping the buffer frees its data and returns the permits.
 
-## Where to go next
+Rejecting a request larger than the entire fixed budget is necessary: returning every outstanding permit could still never satisfy it. Reserve the full amount in one acquisition, too. Acquiring a large reservation incrementally can leave several callers each holding some capacity while all wait for the rest.
 
-The [API documentation](https://docs.rs/asyncband/) covers each primitive's ordering, cancellation, and memory-model contracts in detail, and the [examples crate](https://github.com/apache/asyncband/tree/main/examples) demonstrates the patterns above as complete runnable programs.
+This budget counts the payload bytes in these buffers. Allocator overhead, other allocations, and extra copies require their own accounting. Growing or copying a buffer must reserve the additional capacity before doing so.
+
+## Decide what happens when capacity runs out
+
+Waiting is one admission policy. `acquire(n).await` waits for capacity; `try_acquire(n)` returns `None` when it cannot acquire the requested permits immediately. A caller can use the latter to reject or defer work instead of joining the wait queue. A deadline around `acquire` gives waiting a time limit.
+
+The placement of the acquisition matters. If a program allocates a large payload and only then waits for its permit, that payload already consumes memory outside the budget. Likewise, spawning one task per incoming job and acquiring inside each task limits admitted work while allowing an arbitrarily large population of waiting tasks. Apply admission before creating the resource whose growth you intend to bound, or bound the waiting population separately.
+
+Asyncband assigns permits to queued acquisitions in order. A large acquisition at the front can therefore hold back smaller ones behind it. If a budget has three units left and the first waiter needs five, a later one-unit waiter waits too. This preserves ordering, with a latency cost when request sizes vary substantially.
+
+Dropping a pending acquisition removes it from the queue without leaking permits; retrying joins at the back. After acquisition completes, dropping the permit guard returns its permits. This accounting does not undo application side effects or stop work that has been handed to another task; the task doing that work must retain the permit for its actual lifetime.
+
+## Adjust a running budget
+
+Some applications change their concurrency budget while work is already running. Asyncband provides two operations for this: `release(n)` adds capacity, and [`reduce_permits(n)`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html#method.reduce_permits) removes exactly `n` permits from the logical balance. A reduction does not revoke permits that callers already hold. If insufficient permits are currently available, later returns repay the deficit before ordinary queued acquisitions proceed.
+
+For example, suppose an eight-slot budget is fully occupied and its controller reduces it by three. The eight operations can finish normally. As their guards are dropped, three returned permits retire the deficit; after all eight return, five slots remain available. The controller should serialize budget changes so that each adjustment is applied once.
+
+[`drain_permits(n)`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html#method.drain_permits) only removes permits that are available at the time and returns the number removed. Draining three from that fully occupied budget removes zero, so it cannot promise the same capacity reduction. Also, returning an ordinary guard already restores its permits: an additional `release` would add capacity a second time.
+
+For a fixed limit, acquiring and dropping guards is enough. Add weighted reservations or capacity adjustments when the resource being controlled calls for them, and keep the permit's lifetime aligned with the work it accounts for.

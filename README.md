@@ -21,6 +21,10 @@ Fenced `bash` and `rust` code blocks are highlighted during the build. Docusauru
 
 Run `pnpm format` to format the repository.
 
+## Writing blog posts
+
+Blog posts live under `blog/`, with author profiles in `blog/authors.yml`. Keep avatar source URLs in `image_url`; the blog plugin fetches and embeds them during each build to comply with the [ASF Content Security Policy](https://infra.apache.org/csp.html). Failed downloads stop the build.
+
 ## Validating
 
 Run the type, formatting, lint, and production-build checks:
@@ -39,6 +43,8 @@ pnpm preview
 ```
 
 The generated site is written to `build/`. Pushing to `main` builds and publishes the site through the `asf-site` branch.
+
+The deployment workflow also rebuilds `main` daily to refresh avatars without a source change.
 
 To publish a staging preview, push the site source to a branch named `preview/<name>`. The same deployment workflow publishes the build through `site/<name>-staging`, which ASF serves at `https://asyncband-<name>.staged.apache.org/`.
 

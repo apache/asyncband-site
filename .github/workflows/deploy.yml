@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - 'preview/*'
+  # Refresh avatars even when website source files have not changed.
+  schedule:
+    - cron: '17 3 * * *'
 
 permissions:
   contents: write

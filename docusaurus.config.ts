@@ -36,12 +36,14 @@ const config: Config = {
 		locales: ['en']
 	},
 
+	plugins: ['./plugins/blog.ts'],
+
 	presets: [
 		[
 			'classic',
 			{
 				docs: false,
-				blog: {},
+				blog: false,
 				theme: {
 					customCss: './src/css/custom.css'
 				}
