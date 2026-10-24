@@ -7,7 +7,7 @@ tags: [singleflight, once]
 
 Concurrent callers sometimes need the same expensive result at the same time: a short-lived credential that several requests must refresh, a remote directory that several operations need to exist, or a report that several queries want built. Running the work once per caller multiplies load on whatever produces the result, and every caller waits for its own duplicate execution.
 
-Asyncband's [`singleflight::Group`](https://docs.rs/asyncband/0.7.3/asyncband/singleflight/struct.Group.html) coalesces these calls: while work for a key is in flight, later callers for that key wait and receive a clone of its value. This post covers sharing one execution, what happens when the shared execution fails or is cancelled, and how to choose between a group and the once family, whose members retain completed state.
+Asyncband's [`singleflight::Group`](https://docs.rs/asyncband/0.7.3/asyncband/singleflight/struct.Group.html) coalesces these calls: while work for a key is in flight, later callers for that key wait and receive a clone of its successful value. This post covers sharing one execution, what happens when the shared execution fails or is cancelled, and how to choose between a group and the once family, whose members retain completed state.
 
 <!-- truncate -->
 
