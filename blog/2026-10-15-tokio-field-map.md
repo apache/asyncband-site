@@ -5,107 +5,433 @@ authors: [nanami, tison]
 tags: [migration, tokio]
 ---
 
-Asyncband is a collection of asynchronous synchronization primitives. Several have counterparts in `tokio::sync`, with different API choices; others provide additional forms of coordination. For a project already using Tokio, the practical questions are which operations have a corresponding API and which assumptions need to change.
+*Versions: Asyncband 0.7.3, Tokio 1.53.3*
 
-Runtime independence is shared by both libraries. Tokio documents its [synchronization primitives as runtime agnostic](https://docs.rs/tokio/1.53.3/tokio/sync/index.html#runtime-compatibility), with an exception for methods such as `send_timeout` that use its timer. Asyncband can also run on a Tokio executor. The choice of synchronization API does not by itself require a change of runtime.
+Asyncband is a runtime-agnostic library of asynchronous synchronization primitives. Some serve similar purposes to those in `tokio::sync`, but make different trade-offs in API design and behavior.
+
+We'll examine these differences and identify assumptions to revisit when migrating.
+
+Asyncband has no default features; enable the features for the APIs you use in `Cargo.toml`.
+
 
 <!-- truncate -->
 
-_This guide compares Asyncband 0.7.3 with Tokio 1.53.3. Links point to those versions._
+## Once
 
-## Modules and features
+Tokio's `OnceCell::set()` is synchronous. If another task is already initializing the cell, it immediately returns `SetError::InitializingError`. Asyncband's `set()` instead waits for the ongoing initialization to finish before attempting to set the value:
 
-Asyncband has no default features. Enable the primitives your code uses:
-
-```toml
-asyncband = { version = "0.7.3", features = ["mutex", "semaphore", "once-cell"] }
+```diff
+- cell.set(value)?;
++ cell.set(value).await?;
 ```
 
-Types live in their respective modules. For example, `Mutex` is imported from `asyncband::mutex`, while `OnceCell` lives in `asyncband::once` and requires the `once-cell` feature. The `once` feature enables the separate `Once` primitive.
+Tokio's `SetOnce` lets tasks wait for a value set by another task. Asyncband splits setting and waiting between `Completer` and `Completion`.
 
-The following table is a starting point for locating APIs. Paths in the second column are relative to `asyncband`.
+```rust
+let cell = tokio::sync::SetOnce::new();
 
-| Tokio API         | Asyncband API                                                                                       | Check when porting                                                                                  |
-| ----------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `sync::Mutex`     | [`mutex::Mutex`](https://docs.rs/asyncband/0.7.3/asyncband/mutex/struct.Mutex.html)                 | `try_lock` returns `Option`, rather than `Result`.                                                  |
-| `sync::RwLock`    | [`rwlock::RwLock`](https://docs.rs/asyncband/0.7.3/asyncband/rwlock/struct.RwLock.html)             | `try_read` and `try_write` return `Option`.                                                         |
-| `sync::Semaphore` | [`semaphore::Semaphore`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html) | `acquire(n)` takes a permit count and returns a guard directly.                                     |
-| `sync::Notify`    | [`event`](https://docs.rs/asyncband/0.7.3/asyncband/event/index.html)                               | Choose an event by its retained state; there is no direct replacement for every `Notify` operation. |
-| `sync::Barrier`   | [`barrier::Barrier`](https://docs.rs/asyncband/0.7.3/asyncband/barrier/struct.Barrier.html)         | The participant count is `u32`, rather than `usize`.                                                |
-| `sync::OnceCell`  | [`once::OnceCell`](https://docs.rs/asyncband/0.7.3/asyncband/once/struct.OnceCell.html)             | Initialization is retryable; `set` is asynchronous.                                                 |
-| `sync::SetOnce`   | Related API: [`completion`](https://docs.rs/asyncband/0.7.3/asyncband/completion/index.html)        | Publishing and observing use separate handles; abandonment is reported.                             |
-| `sync::oneshot`   | [`oneshot`](https://docs.rs/asyncband/0.7.3/asyncband/oneshot/index.html)                           | Retain the receive future when selecting repeatedly.                                                |
-| `sync::mpsc`      | [`mpsc`](https://docs.rs/asyncband/0.7.3/asyncband/mpsc/index.html)                                 | Constructors are `bounded` and `unbounded`; `recv` returns `Result`.                                |
-| `sync::broadcast` | [`broadcast::mpmc`](https://docs.rs/asyncband/0.7.3/asyncband/broadcast/mpmc/index.html)            | Bounded sends wait for slow receivers instead of evicting unread messages.                          |
-| `sync::watch`     | [`watch`](https://docs.rs/asyncband/0.7.3/asyncband/watch/index.html)                               | Values are read by cloning, rather than through a borrow guard.                                     |
+cell.set(42).unwrap();
+assert_eq!(*cell.wait().await, 42);
+```
 
-Both libraries use guards to release locks and semaphore permits. Their queued lock and semaphore acquisitions preserve queue order; cancelling an acquisition gives up its place without leaking permits. This does not undo changes made by application code while holding a guard. Both barriers are reusable and designate one leader per generation, but `wait` is not cancel-safe: if another branch wins and you still intend to wait, retain the same pending future instead of registering another arrival.
+```rust
+let (completer, completion) = asyncband::completion::new();
 
-## Initialization and externally supplied values
+let observer = completion.clone();
+completer.complete(42).unwrap();
 
-Both libraries provide `OnceCell::get_or_init` and `get_or_try_init`. A failed, panicked, or cancelled initialization attempt leaves the cell available for another attempt. There are still call-site differences. Tokio's [`OnceCell::set`](https://docs.rs/tokio/1.53.3/tokio/sync/struct.OnceCell.html#method.set) is synchronous and can report that initialization is already in progress. Asyncband's [`set`](https://docs.rs/asyncband/0.7.3/asyncband/once/struct.OnceCell.html#method.set) is awaited: it waits for an ongoing attempt, then either stores the supplied value or returns it if the cell has already been initialized.
+assert_eq!(*observer.wait().await.unwrap(), 42);
+```
 
-Tokio also provides [`SetOnce`](https://docs.rs/tokio/1.53.3/tokio/sync/struct.SetOnce.html). One caller supplies a value with `set`, and other callers can `wait` for it without supplying an initializer. Asyncband's `OnceCell` does not have that waiting API. Its [`completion`](https://docs.rs/asyncband/0.7.3/asyncband/completion/index.html) module serves a related use case: a single-use `Completer` publishes a value to cloneable `Completion` observers. Observers receive an `Abandoned` error if the completer is dropped without publishing. That separation of capabilities and the abandonment result are part of the migration decision; it is not a type rename.
+A `Completion` can be cloned so multiple tasks can wait for the same result. If the `Completer` is dropped before `complete()` is called, every waiter receives an `Abandoned` error. Tokio's `SetOnce` would instead keep waiting for a value.
 
-## Notifications and shutdown
+Asyncband's `once::Once` supports asynchronous initialization. Unlike `std::sync::Once`, a panic does not poison it; cancelled initialization can also be retried.
 
-Tokio's [`Notify`](https://docs.rs/tokio/1.53.3/tokio/sync/struct.Notify.html) supports several notification operations. Choose an Asyncband event based on the state that the application needs to retain:
+`wait().await` lets callers wait for initialization to complete without providing an initializer:
 
-* `notify_one()` wakes one waiter or stores one permit for a later waiter. `AutoResetEvent::set()` has the corresponding one-signal behavior. Multiple calls with no waiting consumer coalesce into one stored signal.
-* `notify_waiters()` notifies existing `Notified` futures, including those created but not yet polled. It does not retain a notification for futures created afterward.
-* `ManualResetEvent::set()` releases current waiters and keeps the event set until `reset()`. Later waits also pass while it remains set. It suits a persistent readiness condition, but a `set()`/`reset()` pair is not a direct replacement for `notify_waiters()`.
+```rust
+use asyncband::once::Once;
 
-For shutdown, retain the shutdown state explicitly. A bare `notify_waiters()` call made before a task creates its wait future cannot tell that task to stop later. Asyncband's [`shutdown`](https://docs.rs/asyncband/0.7.3/asyncband/shutdown/index.html) module combines a persistent request with completion tracking: `request_shutdown()` records the request for current and future observers, and awaiting the coordinator waits for every `ShutdownGuard` to be dropped. Workers still decide how to finish their work and release their guards.
+let once = Once::new();
 
-## Semaphore counts and closure
+tokio::join!(
+    once.call_once(async || initialize().await),
+    async {
+        once.wait().await;
+        use_initialized_state().await;
+    },
+);
+```
 
-Tokio's `acquire().await` acquires one permit and returns a `Result`. Asyncband spells the operation `acquire(1).await` and returns the guard directly, so remove error handling for acquisition when changing that call. Its non-waiting `try_acquire(n)` returns `Option`.
+## Notify and Event
 
-This difference follows from the absence of a closed state. Tokio's [`Semaphore::close`](https://docs.rs/tokio/1.53.3/tokio/sync/struct.Semaphore.html#method.close) makes pending and future acquisitions fail. Asyncband has no corresponding operation. Code that uses closure to stop admission must keep a separate shutdown signal and select between it and acquisition. An acquisition that can never be satisfied still needs to be rejected or given a deadline by the caller.
+Tokio's `Notify` can notify one waiter with `notify_one()` or all waiters with `notify_waiters()`. Asyncband separates these behaviors into `AutoResetEvent` and `ManualResetEvent`.
 
-Permit counts also differ. Tokio accepts `usize` in `new` and `add_permits`, but `u32` in `acquire_many`; its `MAX_PERMITS` is `usize::MAX >> 3` because the representation reserves bits. Asyncband uses `usize` counts throughout and does not reserve count bits. `acquire(n)` handles both single- and multi-permit requests, and `release(n)` adds capacity.
+### AutoResetEvent
 
-Both libraries let a permit guard `forget` its permits so that dropping it does not return them. When adjusting capacity without first acquiring a guard, distinguish these operations:
+`AutoResetEvent::set()` and `wait()` correspond to Tokio's `notify_one()` and `notified()`:
 
-* Tokio's `forget_permits(n)` and Asyncband's [`drain_permits(n)`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html#method.drain_permits) remove up to `n` currently available permits and report the amount removed.
-* Asyncband's [`reduce_permits(n)`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html#method.reduce_permits) reduces the logical balance by exactly `n`. It leaves existing guards valid; if too few permits are available, future returns repay the deficit before ordinary queued acquisitions proceed.
+```diff
+- notify.notify_one();
+- notify.notified().await;
++ event.set();
++ event.wait().await;
+```
 
-For example, reducing a fully occupied eight-slot budget by three eventually leaves five slots. Draining three at that moment removes zero. Forgetting an acquired guard requires obtaining those permits first, which may itself wait.
+### ManualResetEvent
 
-## Channel behavior
+Tokio's `notify_waiters()` notifies `Notified` futures created before the call, even if they have not yet been polled:
 
-### MPSC constructors and receive results
+```rust
+use std::{future::Future, task::{Context, Poll, Waker}};
 
-Tokio's `mpsc::channel(capacity)` becomes Asyncband's `mpsc::bounded(capacity)`, and `unbounded_channel()` becomes `unbounded()`. Both bounded variants apply backpressure when full. Their receive results differ: Tokio uses `Option<T>`, with `None` after the channel drains and closes; Asyncband uses `Result<T, RecvError>`, reporting disconnection after buffered values drain. Update receive loops and their end-of-stream handling along with the imports.
+let mut cx = Context::from_waker(Waker::noop());
 
-### Broadcast retention
+let notify = tokio::sync::Notify::new();
+let mut before = Box::pin(notify.notified());
 
-Tokio's [`broadcast`](https://docs.rs/tokio/1.53.3/tokio/sync/broadcast/index.html) lets a producer send without waiting for buffer capacity. When its bounded buffer fills, old values are evicted and affected receivers observe `RecvError::Lagged`.
+notify.notify_waiters();
 
-Asyncband's [`broadcast::mpmc::bounded`](https://docs.rs/asyncband/0.7.3/asyncband/broadcast/mpmc/fn.bounded.html) retains messages until active receivers have read them or dropped their subscriptions. A slow receiver therefore makes `send(value).await` wait once the shared backlog fills. There is no lag error, but one receiver that stops draining can stall every producer. Reading a message releases that receiver's claim on buffer capacity; processing it afterward does not hold the slot.
+let mut after = Box::pin(notify.notified());
 
-The send result also changes: Asyncband's bounded `send` returns `()`, rather than Tokio's result containing a receiver count. With no active receivers, an Asyncband broadcast send retains nothing. The [channel design](https://github.com/apache/asyncband/issues/167) and [bounded broadcast discussion](https://github.com/apache/asyncband/issues/213) describe these retention choices. Before porting, decide whether slow consumers should cause missed messages or producer backpressure.
+assert_eq!(before.as_mut().poll(&mut cx), Poll::Ready(()));
+assert_eq!(after.as_mut().poll(&mut cx), Poll::Pending);
+```
 
-### Watch reads
+After `set()`, Asyncband's `ManualResetEvent` remains signaled until `reset()` is called. The future returned by `wait()` checks the event state on its first poll and registers as a waiter if it is not signaled.
 
-Both watch channels retain the latest value and may coalesce intermediate updates. Tokio exposes `borrow()` and `borrow_and_update()` guards. Asyncband's `get()` clones the current value without marking it observed; `recv().await` waits for an update, clones the latest value, and marks that version observed together. Use `recv` when the consumer needs the updated value, and consider an `Arc<T>` payload when cloning the underlying value would be expensive.
+```rust
+use std::{future::Future, task::{Context, Poll, Waker}};
 
-### Oneshot selection
+let mut cx = Context::from_waker(Waker::noop());
 
-Both oneshot channels provide a synchronous `send` and let the receiver await one value. Tokio's receiver implements `Future`, so it can be borrowed as `&mut receiver` in a `select!`. Asyncband's receiver implements `IntoFuture`. Call `receiver.into_future()` once and retain the returned `Recv` future, then select on `&mut recv` when the receive should survive another branch winning. Dropping the Asyncband receiver or its receive future disconnects the channel and discards any unread message.
+let event = asyncband::event::ManualResetEvent::new();
 
-## Additional coordination APIs
+let mut wait_after_reset = Box::pin(event.wait());
 
-Asyncband also provides dedicated APIs for the following tasks:
+let mut wait_before_set = Box::pin(event.wait());
+assert_eq!(wait_before_set.as_mut().poll(&mut cx), Poll::Pending);
 
-| Asyncband API                                                                                     | Use                                                                                |
-| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| [`Latch`](https://docs.rs/asyncband/0.7.3/asyncband/latch/struct.Latch.html)                      | Wait for a one-shot countdown to reach zero.                                       |
-| [`WaitGroup`](https://docs.rs/asyncband/0.7.3/asyncband/waitgroup/struct.WaitGroup.html)          | Wait for a dynamically registered set of workers to finish.                        |
-| [`Phaser`](https://docs.rs/asyncband/0.7.3/asyncband/phaser/struct.Phaser.html)                   | Coordinate multiple phases with a changing participant set.                        |
-| [`Condvar`](https://docs.rs/asyncband/0.7.3/asyncband/condvar/struct.Condvar.html)                | Wait for a predicate protected by an Asyncband mutex.                              |
-| [`Once`](https://docs.rs/asyncband/0.7.3/asyncband/once/struct.Once.html)                         | Complete one successful initialization without storing its result.                 |
-| [`LazyCell`](https://docs.rs/asyncband/0.7.3/asyncband/once/struct.LazyCell.html)                 | Own an initializer and preserve its in-progress future across caller cancellation. |
-| [`OnceMap`](https://docs.rs/asyncband/0.7.3/asyncband/once/struct.OnceMap.html)                   | Initialize and retain values independently by key.                                 |
-| [`singleflight::Group`](https://docs.rs/asyncband/0.7.3/asyncband/singleflight/struct.Group.html) | Share work among overlapping calls for a key without retaining a cache afterward.  |
-| [`pool`](https://docs.rs/asyncband/0.7.3/asyncband/pool/index.html)                               | Reuse objects through bounded or unbounded pools.                                  |
+event.set();
+event.wait().await;
+event.reset();
+
+assert_eq!(wait_after_reset.as_mut().poll(&mut cx), Poll::Pending);
+assert_eq!(wait_before_set.as_mut().poll(&mut cx), Poll::Ready(()));
+
+event.set();
+assert_eq!(wait_after_reset.as_mut().poll(&mut cx), Poll::Ready(()));
+```
+
+## Semaphore
+
+Asyncband uses `acquire(n)` to acquire one or multiple permits, rather than Tokio's separate `acquire()` and `acquire_many(n)` methods:
+
+```diff
+- let permit = semaphore.acquire().await?;
+- let permits = semaphore.acquire_many(3).await?;
++ let permit = semaphore.acquire(1).await;
++ let permits = semaphore.acquire(3).await;
+```
+
+Tokio's `Semaphore::close()` causes pending and subsequent acquisition attempts to return `AcquireError`:
+
+```rust
+let sem = tokio::sync::Semaphore::new(0);
+sem.close();
+
+assert!(sem.acquire().await.is_err());
+```
+
+Asyncband's `Semaphore` cannot be closed. `acquire(n)` returns a permit guard rather than a `Result` and waits until enough permits are available. Code that relies on Tokio's `close()` to stop pending acquisitions needs a separate cancellation mechanism:
+
+```rust
+let sem = asyncband::semaphore::Semaphore::new(0);
+
+assert!(sem.try_acquire(1).is_none());
+
+sem.release(1);
+let _permit = sem.acquire(1).await; // Waits while no permits are available
+```
+
+### Adjusting Capacity
+
+`drain_permits(n)` corresponds to Tokio's `forget_permits(n)`. It removes only currently available permits and returns the number actually removed. `reduce_permits(n)` instead reduces the logical capacity.
+
+```rust
+use asyncband::semaphore::Semaphore;
+
+let sem = Semaphore::new(8);
+let held = sem.acquire(8).await;
+
+assert_eq!(sem.drain_permits(3), 0);
+
+sem.reduce_permits(3);
+drop(held);
+
+assert_eq!(sem.available_permits(), 5);
+```
+
+## Channel
+
+### MPSC
+
+Tokio's `channel(capacity)` and `unbounded_channel()` correspond to Asyncband's `bounded(capacity)` and `unbounded()`:
+
+```diff
+- let (tx, mut rx) = tokio::sync::mpsc::channel::<u32>(16);
++ let (tx, mut rx) = asyncband::mpsc::bounded::<u32>(16);
+```
+
+Tokio's `recv()` returns `Option<T>`, yielding `None` when all senders have disconnected and the buffer is empty. Asyncband's `recv()` returns `Result<T, RecvError>`, yielding `Err(RecvError)` in the same case.
+
+```rust
+let (tx, mut rx) = asyncband::mpsc::bounded(1);
+tx.send(42).await.unwrap();
+drop(tx);
+
+assert_eq!(rx.recv().await, Ok(42));
+assert!(rx.recv().await.is_err());
+```
+
+### Broadcast
+
+Tokio's bounded broadcast channel overwrites the oldest messages when the buffer is full, rather than waiting for slow receivers. Receivers that fall behind get `RecvError::Lagged`:
+
+```rust
+let (tx, mut rx) = tokio::sync::broadcast::channel(1);
+
+tx.send(1).unwrap();
+tx.send(2).unwrap();
+
+assert!(matches!(
+    rx.recv().await,
+    Err(tokio::sync::broadcast::error::RecvError::Lagged(1))
+));
+```
+
+Asyncband's bounded `broadcast::mpmc` does not overwrite messages that active receivers have not yet read. When the buffer is full, `send().await` waits, while `try_send()` returns `Full`:
+
+```rust
+use asyncband::broadcast::mpmc::{self, TrySendError};
+
+let (tx, mut fast) = mpmc::bounded(1);
+let mut slow = tx.subscribe();
+
+tx.try_send(1).unwrap();
+assert_eq!(fast.try_recv(), Ok(1));
+
+assert!(matches!(tx.try_send(2), Err(TrySendError::Full(2))));
+
+assert_eq!(slow.try_recv(), Ok(1));
+tx.try_send(2).unwrap();
+```
+
+Tokio's `send()` returns the number of receivers on success or `SendError` when there are none. Asyncband's `send()` returns `()` and discards messages if there are no active receivers.
+
+### Watch
+
+Tokio's `borrow()` and `borrow_and_update()` return read guards. Asyncband's `get()` and `recv()` return clones of the current value:
+
+```diff
+- let value = rx.borrow().clone();
++ let value = rx.get();
+
+- rx.changed().await?;
+- let value = rx.borrow_and_update().clone();
++ let value = rx.recv().await?;
+```
+
+### Oneshot
+
+Tokio's oneshot `Receiver` implements `Future` directly. Asyncband separates the receiver from the receive future: its `Receiver` implements `IntoFuture`, which produces a `Recv` future.
+
+Both support `rx.await`. When reusing a receive operation across iterations of a `select!` loop, Tokio can poll `&mut rx` directly; Asyncband requires converting the receiver into a future first:
+
+```diff
+- let mut recv = rx;
++ let mut recv = rx.into_future();
+
+  loop {
+      tokio::select! {
+          result = &mut recv => {
+              handle(result?);
+              break;
+          }
+          _ = tick.tick() => {}
+      }
+  }
+```
+
+## Additional Asyncband APIs
+
+### Shutdown
+
+`shutdown.await` issues a shutdown request and waits until all `ShutdownGuard` handles have been dropped.
+
+```rust
+let (shutdown, guard) = asyncband::shutdown::new();
+
+tokio::spawn(async move {
+    guard.shutdown_requested().await;
+    cleanup().await;
+});
+
+shutdown.await;
+```
+
+A `ShutdownGuard` can be cloned for multiple tasks.
+
+### Latch and WaitGroup
+
+`Latch` waits for a fixed number of operations to finish. Each `count_down()` decrements the count; `wait()` completes when it reaches zero:
+
+```rust
+use asyncband::latch::Latch;
+
+let latch = Latch::new(1);
+
+tokio::join!(
+    async {
+        initialize().await;
+        latch.count_down();
+    },
+    async {
+        latch.wait().await;
+        start_service().await;
+    },
+);
+```
+
+`WaitGroup` does not require an initial count. Cloning a handle adds a participant, and dropping it marks that participant as finished:
+
+```rust
+use asyncband::waitgroup::WaitGroup;
+
+let group = WaitGroup::new();
+let worker = group.clone();
+
+tokio::spawn(async move {
+    process().await;
+    drop(worker);
+});
+
+group.await;
+```
+
+### Phaser
+
+`Phaser` synchronizes tasks across multiple phases. Each participant calls `wait()` to mark its arrival at the current phase; the next phase begins after all participants have arrived. Dropping a participant removes it from subsequent phases.
+
+```rust
+use asyncband::phaser::Phaser;
+
+let phaser = Phaser::new();
+let mut a = phaser.register_one()?;
+let mut b = phaser.register_one()?;
+
+let (phase_a, phase_b) = tokio::join!(a.wait(), b.wait());
+assert_eq!(phase_a?, 1);
+assert_eq!(phase_b?, 1);
+
+drop(b);
+assert_eq!(a.wait().await?, 2);
+```
+
+### Condvar
+
+`Condvar` notifies waiting tasks but does not store application state, so it is normally paired with a `Mutex` protecting that state. `wait_while()` takes a `MutexGuard` and a predicate. While the predicate is `true`, it releases the lock and waits for a notification. After a notification, it reacquires the lock and checks the condition again, returning when the predicate is `false`.
+
+```rust
+use asyncband::{condvar::Condvar, mutex::Mutex};
+
+let ready = Mutex::new(false);
+let condvar = Condvar::new();
+
+tokio::join!(
+    async {
+        let ready = condvar
+            .wait_while(ready.lock().await, |ready| !*ready)
+            .await;
+        assert!(*ready);
+    },
+    async {
+        *ready.lock().await = true;
+        condvar.notify_one();
+    },
+);
+```
+
+### LazyCell
+
+The standard library's `LazyCell` and `LazyLock` initialize synchronously on first access. Asyncband's `once::LazyCell` supports asynchronous initialization.
+
+```rust
+use asyncband::once::LazyCell;
+
+let lazy = LazyCell::new(async || future().await);
+```
+
+### OnceMap and Singleflight
+
+`OnceMap` and `singleflight::Group` both deduplicate concurrent work for the same key. `OnceMap` caches successful results, while `singleflight` shares work only among overlapping calls:
+
+```rust
+use asyncband::{once::OnceMap, singleflight::Group};
+
+let cache = OnceMap::new();
+let group = Group::new();
+
+let cached = cache
+    .compute("key", async || load_value().await)
+    .await;
+
+let result = group
+    .work("key", async || load_value().await)
+    .await;
+```
+
+### Pool
+
+Asyncband provides bounded and unbounded object pools. A bounded pool requires a manager implementing `ManageObject`.
+
+```rust
+pub trait ManageObject: Send + Sync {
+    type Object: Send;
+    type Error: Send;
+
+    fn create(&self) -> impl Future<Output = Result<Self::Object, Self::Error>> + Send;
+
+    fn is_recyclable(
+        &self,
+        object: &mut Self::Object,
+        status: &ObjectStatus,
+    ) -> impl Future<Output = Result<(), Self::Error>> + Send;
+
+    fn on_detached(&self, _object: &mut Self::Object) {}
+}
+```
+
+With a `Manager` implementing `ManageObject`:
+
+```rust
+use asyncband::pool::{bounded, unbounded};
+
+let bounded = bounded::Pool::new(bounded::PoolConfig::new(16), Manager);
+let bounded_object: Result<_, _> = bounded.get().await;
+
+let unbounded = unbounded::Pool::new(unbounded::PoolConfig::default(), Manager);
+let unbounded_object: Result<_, _> = unbounded.get().await;
+```
+
+Unbounded pools accept objects through `extend_one()`. An unbounded pool created with `never_manage()` doesn't need a custom manager and provides additional methods: `try_get()` and `get_or_create()`:
+
+```rust
+let pool = unbounded::Pool::<Vec<u8>>::never_manage(Default::default());
+
+pool.extend_one(Vec::with_capacity(4096));
+let reused: Option<_> = pool.try_get();
+let created: Result<_, ()> = pool
+    .get_or_create(async || Ok(Vec::new()))
+    .await;
+```
