@@ -11,7 +11,7 @@ Asyncband's [`singleflight::Group`](https://docs.rs/asyncband/0.7.3/asyncband/si
 
 <!-- truncate -->
 
-_The Asyncband APIs below are from version 0.7.3, with the `singleflight`, `once-cell`, `once-map`, `lazy-cell`, and `once` features enabled._
+_The Asyncband APIs below are from version 0.7.3, with the `singleflight` features enabled._
 
 ## Share one execution per key
 
@@ -56,9 +56,9 @@ The function must not call `work` or `try_work` for its own key: it would wait f
 
 [`forget`](https://docs.rs/asyncband/0.7.3/asyncband/singleflight/struct.Group.html#method.forget) detaches a key's in-flight execution. Calls that already joined it keep their result; later callers start a fresh execution even while the old one is still running. Use it when an in-flight call is taking too long and newer callers should not queue behind it.
 
-## Choosing between a group and the `once` family
+## Choosing between a group and the Once family
 
-Asyncband's `once` family retains completed state; a group does not. The members differ in what they retain:
+Asyncband's Once family retains completed state; a group does not. The members differ in what they retain:
 
 | Asyncband API                                                                                     | After completion                                   | Use                                                                                             |
 | ------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
