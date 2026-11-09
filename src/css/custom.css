@@ -1,41 +1,157 @@
 :root {
-	--ifm-color-primary: #3071a9;
-	--ifm-color-primary-dark: #2b6698;
-	--ifm-color-primary-darker: #285f8f;
-	--ifm-color-primary-darkest: #214f76;
-	--ifm-color-primary-light: #357cba;
-	--ifm-color-primary-lighter: #3881c0;
-	--ifm-color-primary-lightest: #5395cb;
+	/* Brand palette — Apache Asyncband identity v1 ("The Pitch").
+	   Ember #F2542D is the accent; the interactive primary is a burnt ember
+	   that keeps AA contrast for small text on paper backgrounds. */
+	--ifm-color-primary: #c13e17;
+	--ifm-color-primary-dark: #ae3714;
+	--ifm-color-primary-darker: #a33413;
+	--ifm-color-primary-darkest: #882a0f;
+	--ifm-color-primary-light: #cb4e27;
+	--ifm-color-primary-lighter: #d25a33;
+	--ifm-color-primary-lightest: #dd6e4a;
 	--ifm-code-font-size: 95%;
+
+	/* Brand surfaces */
+	--asyncband-ink: #14110f;
+	--asyncband-paper: #f4eee3;
+	--asyncband-haze: #d9cdb9;
+	--asyncband-ember: #f2542d;
+}
+
+/* Dark mode lifts the ember so links stay readable on ink. */
+[data-theme='dark'] {
+	--ifm-color-primary: #e86a44;
+	--ifm-color-primary-dark: #e0572d;
+	--ifm-color-primary-darker: #dc4e22;
+	--ifm-color-primary-darkest: #c93e12;
+	--ifm-color-primary-light: #eb7d5b;
+	--ifm-color-primary-lighter: #ee8a6b;
+	--ifm-color-primary-lightest: #f3a48a;
+	--asyncband-haze: #3a342c;
 }
 
 /* Homepage hero */
 .home-hero {
-	padding: 4.5rem 0;
-	text-align: center;
-	background: linear-gradient(180deg, #eef3f8 0%, #ffffff 100%);
+	padding: 4.5rem 0 3.5rem;
+	background: linear-gradient(180deg, var(--asyncband-paper) 0%, #ffffff 100%);
 	border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+[data-theme='dark'] .home-hero {
+	background: linear-gradient(180deg, #1d1915 0%, var(--ifm-background-color) 100%);
+}
+
+.home-hero__grid {
+	display: grid;
+	grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+	gap: 3rem;
+	align-items: center;
+}
+
+@media (max-width: 996px) {
+	.home-hero__grid {
+		grid-template-columns: 1fr;
+		gap: 2rem;
+	}
+}
+
+.home-hero__lead {
+	text-align: left;
+}
+
+.home-hero__eyebrow {
+	margin: 0 0 0.75rem;
+	color: var(--ifm-color-primary);
+	font-size: 0.8rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
 }
 
 .home-hero__title {
 	margin: 0 0 1rem;
-	font-size: clamp(2rem, 6vw, 3rem);
+	color: var(--asyncband-ink);
+	font-size: clamp(2rem, 5vw, 2.8rem);
 	letter-spacing: -0.02em;
 	text-wrap: balance;
 }
 
+[data-theme='dark'] .home-hero__title {
+	color: var(--ifm-heading-color);
+}
+
 .home-hero__tagline {
-	max-width: 760px;
-	margin: 0 auto 1.75rem;
+	margin: 0 0 1.75rem;
 	color: var(--ifm-color-emphasis-700);
-	font-size: 1.15rem;
+	font-size: 1.1rem;
 }
 
 .home-hero__actions {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.75rem;
+	justify-content: flex-start;
+}
+
+.home-hero__runtimes {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.4rem;
+	margin: 1.5rem 0 0;
+	color: var(--ifm-color-emphasis-600);
+	font-size: 0.85rem;
+}
+
+.home-hero__runtimes-label {
+	margin-right: 0.25rem;
+}
+
+.home-hero__runtime-chip {
+	padding: 0.15rem 0.6rem;
+	border: 1px solid var(--asyncband-haze);
+	border-radius: 999px;
+}
+
+.home-hero__mark-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	justify-content: center;
+	padding: 2.5rem 2rem;
+	border: 1px solid var(--asyncband-haze);
+	border-radius: 16px;
+	background: color-mix(in srgb, var(--asyncband-paper) 45%, transparent);
+	text-align: center;
+}
+
+[data-theme='dark'] .home-hero__mark-card {
+	background: color-mix(in srgb, #ffffff 3%, transparent);
+}
+
+.home-hero__mark-card img {
+	width: 10.5rem;
+	height: 10.5rem;
+}
+
+/* The hero swaps light/dark mark assets with the site theme, not the OS scheme. */
+.home-hero__mark-image--dark {
+	display: none;
+}
+
+[data-theme='dark'] .home-hero__mark-image--light {
+	display: none;
+}
+
+[data-theme='dark'] .home-hero__mark-image--dark {
+	display: block;
+}
+
+.home-hero__mark-caption {
+	margin: 1.25rem 0 0;
+	color: var(--ifm-color-emphasis-600);
+	font-size: 0.9rem;
+	font-style: italic;
 }
 
 /* Homepage feature cards */
@@ -51,8 +167,13 @@
 .home-feature {
 	width: 100%;
 	padding: 1.25rem;
-	border: 1px solid var(--ifm-color-emphasis-200);
+	border: 1px solid var(--asyncband-haze);
 	border-radius: 8px;
+	transition: border-color 150ms ease;
+}
+
+.home-feature:hover {
+	border-color: var(--ifm-color-primary);
 }
 
 .home-feature h3 {
@@ -72,6 +193,252 @@
 	padding-bottom: 3rem;
 }
 
+/* Homepage generic section */
+.home-section {
+	margin: 3.5rem auto 0;
+}
+
+.home-section h2 {
+	margin-bottom: 0.75rem;
+}
+
+.home-section__intro {
+	margin: 0 0 1.5rem;
+	color: var(--ifm-color-emphasis-700);
+}
+
+/* Runtime-agnostic diagram */
+.home-diagram {
+	max-width: 960px;
+}
+
+.home-diagram__svg {
+	display: block;
+	width: 100%;
+	height: auto;
+	margin: 1.5rem auto 0.75rem;
+}
+
+.home-diagram__caption {
+	margin: 0 auto;
+	max-width: 720px;
+	color: var(--ifm-color-emphasis-600);
+	font-size: 0.9rem;
+	text-align: center;
+}
+
+.diagram-box {
+	fill: var(--ifm-background-color);
+	stroke: var(--asyncband-haze);
+	stroke-width: 1.5;
+}
+
+.diagram-box--soft {
+	fill: var(--asyncband-paper);
+}
+
+[data-theme='dark'] .diagram-box--soft {
+	fill: #2a241d;
+}
+
+.diagram-box--ink {
+	fill: var(--asyncband-ink);
+	stroke: var(--asyncband-haze);
+}
+
+/* In dark mode the primitives box inverts — always the highest-contrast node. */
+[data-theme='dark'] .diagram-box--ink {
+	fill: var(--asyncband-paper);
+}
+
+[data-theme='dark'] .diagram-text--paper {
+	fill: #14110f;
+}
+
+[data-theme='dark'] .diagram-text--paper-muted {
+	fill: #7c7266;
+}
+
+.diagram-text {
+	fill: var(--ifm-heading-color);
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.diagram-text--muted,
+.diagram-text--paper-muted {
+	font-size: 13px;
+	font-weight: 400;
+}
+
+.diagram-text--muted {
+	fill: var(--ifm-color-emphasis-600);
+}
+
+.diagram-text--paper {
+	fill: #f4eee3;
+}
+
+.diagram-text--paper-muted {
+	fill: #b9ad99;
+}
+
+.diagram-arrow {
+	stroke: var(--asyncband-ember);
+	stroke-width: 2.5;
+}
+
+.diagram-arrow-head {
+	fill: var(--asyncband-ember);
+}
+
+/* Primitive cards */
+.primitive-group {
+	margin: 0 0 2rem;
+}
+
+.primitive-group__title {
+	margin: 0 0 0.75rem;
+	color: var(--ifm-color-primary);
+	font-size: 0.85rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.primitive-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	gap: 0.75rem;
+}
+
+.primitive-card {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	padding: 0.9rem 1rem;
+	border: 1px solid var(--asyncband-haze);
+	border-radius: 8px;
+	text-decoration: none;
+	transition: border-color 150ms ease;
+}
+
+.primitive-card:hover {
+	border-color: var(--ifm-color-primary);
+	text-decoration: none;
+}
+
+.primitive-card:focus-visible {
+	border-color: var(--ifm-color-primary);
+	outline: none;
+}
+
+.primitive-card__head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+
+.primitive-card__name {
+	color: var(--ifm-color-primary);
+	font-weight: 600;
+}
+
+.primitive-card__feature {
+	padding: 0.1rem 0.45rem;
+	border-radius: 4px;
+	background: color-mix(in srgb, var(--asyncband-haze) 35%, transparent);
+	color: var(--ifm-color-emphasis-800);
+	font-size: 0.75rem;
+}
+
+[data-theme='dark'] .primitive-card__feature {
+	color: var(--ifm-color-emphasis-300);
+}
+
+.primitive-card__use {
+	color: var(--ifm-color-emphasis-700);
+	font-size: 0.85rem;
+	line-height: 1.45;
+}
+
+/* ===== Blog ===== */
+
+/* The Recent-posts aside duplicates the main list while the blog is small. */
+.blog-list-page aside.col--3,
+.blog-post-page aside.col--3 {
+	display: none;
+}
+
+.blog-list-page main.col--7 {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 1.25rem;
+	flex: 1 1 0%;
+	max-width: 100%;
+}
+
+.blog-list-page main.col--7 > nav.pagination-nav {
+	grid-column: 1 / -1;
+}
+
+.blog-list-page article.margin-bottom--xl {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 1.25rem 1.4rem;
+	border: 1px solid var(--asyncband-haze);
+	border-radius: 8px;
+	transition: border-color 150ms ease;
+}
+
+.blog-list-page article.margin-bottom--xl:hover {
+	border-color: var(--ifm-color-primary);
+}
+
+.blog-list-page article.margin-bottom--xl h2 {
+	font-size: 1.25rem;
+}
+
+.blog-list-page article.margin-bottom--xl h2 a {
+	color: var(--ifm-color-primary);
+}
+
+.blog-list-page article.margin-bottom--xl .markdown {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 7;
+	overflow: hidden;
+}
+
+/* Author titles clip in card width; names and avatars are enough there. */
+.blog-list-page .avatar__intro > :nth-child(2) {
+	display: none;
+}
+
+.blog-post-page main.col--7 {
+	flex: 1 1 0%;
+	max-width: 780px;
+}
+
+/* ===== Prose polish ===== */
+
+/* Anchored headings must clear the fixed navbar. */
+.markdown :is(h1, h2, h3, h4) {
+	scroll-margin-top: 5.5rem;
+}
+
+/* Wide tables (migration posts) scroll instead of breaking the layout. */
+.markdown table {
+	display: block;
+	overflow-x: auto;
+}
+
+.markdown blockquote {
+	border-left: 3px solid var(--asyncband-ember);
+}
+
 /* Incubating badge next to the project name */
 .navbar__title::after {
 	margin-left: 0.5rem;
@@ -81,6 +448,13 @@
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
 	content: 'Incubating';
+}
+
+.navbar__logo {
+	border-radius: 4px;
+	height: 2rem;
+	margin-right: 0.25rem;
+	width: 2rem;
 }
 
 /* GitHub icon link in the navbar */
