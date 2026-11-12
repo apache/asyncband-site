@@ -55,10 +55,18 @@ const config: Config = {
 		image: 'og.png',
 		colorMode: {
 			defaultMode: 'light',
-			disableSwitch: true
+			disableSwitch: false,
+			respectPrefersColorScheme: true
 		},
 		navbar: {
 			title: 'Apache Asyncband',
+			logo: {
+				src: 'img/asyncband-icon.svg',
+				srcDark: 'img/asyncband-icon-reverse.svg',
+				alt: 'Apache Asyncband logo',
+				width: 32,
+				height: 32
+			},
 			items: [
 				{ to: '/downloads', label: 'Downloads', position: 'left' },
 				{ to: '/blog', label: 'Blog', position: 'left' },
