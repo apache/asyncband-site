@@ -46,7 +46,7 @@ The generated site is written to `build/`. Pushing to `main` builds and publishe
 
 The deployment workflow also rebuilds `main` daily to refresh avatars without a source change.
 
-To publish a staging preview, push the site source to a branch named `preview/<name>`. The same deployment workflow publishes the build through `site/<name>-staging`, which ASF serves at `https://asyncband-<name>.staged.apache.org/`.
+To publish a staging preview, push the site source to a branch named `preview/<name>`. The same deployment workflow publishes the build through `site/<name>-staging`, which ASF serves at `https://asyncband-<name>.staged.apache.org/`, and deletes `site/<name>-staging` when the pull request closes.
 
 ## License
 
