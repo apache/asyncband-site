@@ -5,11 +5,7 @@ on:
     branches:
       - main
       - 'preview/*'
-  pull_request:
-    types:
-      - closed
-    branches:
-      - main
+  delete:
   # Refresh avatars even when website source files have not changed.
   schedule:
     - cron: '17 3 * * *'
@@ -17,15 +13,14 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: site-deploy-${{ github.event.pull_request.head.repo.full_name || github.repository }}-${{ github.event.pull_request.head.ref || github.ref_name }}
-  cancel-in-progress: ${{ (github.event.pull_request.head.ref || github.ref_name) != 'main' }}
-
 jobs:
   deploy:
     name: Site
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'schedule' || (github.event_name == 'push' && !github.event.deleted)
     runs-on: ubuntu-latest
+    concurrency:
+      group: site-deploy-${{ github.repository }}-${{ github.ref_name }}
+      cancel-in-progress: ${{ github.ref_name != 'main' }}
     permissions:
       contents: write
     steps:
@@ -74,23 +69,28 @@ jobs:
 
   cleanup:
     name: Delete staging branch
-    # The preview is over once the pull request is closed, merged or not.
     if: >-
-      github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'preview/') && github.event.pull_request.head.repo.full_name == github.repository
+      github.event_name == 'delete' && github.event.ref_type == 'branch' && startsWith(github.event.ref, 'preview/')
     runs-on: ubuntu-latest
+    # Only preview branch deletions can cancel the matching deployment.
+    concurrency:
+      group: site-deploy-${{ github.repository }}-${{ github.event.ref }}
+      cancel-in-progress: true
     permissions:
       contents: write
     steps:
       - name: Delete the site/<name>-staging branch if it exists
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          SOURCE_BRANCH: ${{ github.event.ref }}
           REPOSITORY: ${{ github.repository }}
         run: |
-          name="${HEAD_REF#preview/}"
+          name="${SOURCE_BRANCH#preview/}"
           [[ "$name" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || exit 0
           staging_branch="site/${name}-staging"
-          if gh api "repos/${REPOSITORY}/git/ref/heads/${staging_branch}" --silent; then
+          exists="$(gh api "repos/${REPOSITORY}/git/matching-refs/heads/${staging_branch}" \
+            --jq "any(.[]; .ref == \"refs/heads/${staging_branch}\")")"
+          if [ "$exists" = true ]; then
             gh api -X DELETE "repos/${REPOSITORY}/git/refs/heads/${staging_branch}"
             echo "Deleted ${staging_branch}."
           else

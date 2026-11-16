@@ -46,7 +46,9 @@ The generated site is written to `build/`. Pushing to `main` builds and publishe
 
 The deployment workflow also rebuilds `main` daily to refresh avatars without a source change.
 
-To publish a staging preview, push the site source to a branch named `preview/<name>`. The same deployment workflow publishes the build through `site/<name>-staging`, which ASF serves at `https://asyncband-<name>.staged.apache.org/`, and deletes `site/<name>-staging` when the pull request closes.
+To publish a staging preview, push the site source to a branch named `preview/<name>` in this repository. The same deployment workflow publishes the build through `site/<name>-staging`, which ASF serves at `https://asyncband-<name>.staged.apache.org/`.
+
+Deleting `preview/<name>` removes the generated `site/<name>-staging` branch. Source branches are deleted automatically after merging a pull request. Closing a pull request without merging keeps its preview available until you delete the source branch. The staged preview may remain reachable until ASF infrastructure prunes it.
 
 ## License
 
