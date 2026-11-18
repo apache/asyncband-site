@@ -1,12 +1,25 @@
 ## Overview
 
-Asyncband's async APIs are built on standard futures and wakers. The library does not spawn tasks, own worker threads, install timers, or require a reactor or I/O driver. Applications can poll its futures with Tokio, async-std, smol, a custom executor, or any other standards-based runtime, and compose runtime services such as deadlines around them.
+Asyncband's async APIs are built on standard futures and wakers. Applications can poll its futures with Tokio, async-std, smol, a custom executor, or any other standards-based runtime, and compose runtime services such as deadlines around them.
+
+The library never:
+
+* spawns tasks
+* owns worker threads
+* installs timers
+* requires a reactor or I/O driver
 
 ### Project scope
 
 The project is not limited to small or stateless synchronization primitives. Stateful utilities such as a singleflight group or an object pool fit when they provide a generally reusable coordination mechanism and remain independent of executor policy.
 
-The boundary is mechanism versus policy. Task placement, timers, deadlines, retries, periodic maintenance, and application lifecycle orchestration stay with the caller and its runtime. Potential future-concurrency or scheduling APIs are evaluated against the same boundary: they must remain executor-independent and compose with caller-owned execution and timing.
+The boundary is mechanism versus policy:
+
+| Mechanism — Asyncband provides                                                                     | Policy — stays with the caller and its runtime                                                            |
+| -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Synchronization, initialization, task coordination, channels, resource reuse, and workload control | Task placement, timers, deadlines, retries, periodic maintenance, and application lifecycle orchestration |
+
+Potential future-concurrency or scheduling APIs are evaluated against the same boundary: they must remain executor-independent and compose with caller-owned execution and timing.
 
 ## Getting started
 
@@ -27,32 +40,6 @@ async fn increment() {
 ```
 
 Public paths stay direct while Cargo features keep unused implementations out of the build.
-
-## API map
-
-| Area                 | API                                                                                            | Feature        | Use                                                                                                             |
-| -------------------- | ---------------------------------------------------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------- |
-| Locks and conditions | [`Mutex`](https://docs.rs/asyncband/*/asyncband/mutex/struct.Mutex.html)                       | `mutex`        | Protect shared data with asynchronous mutual exclusion.                                                         |
-|                      | [`RwLock`](https://docs.rs/asyncband/*/asyncband/rwlock/struct.RwLock.html)                    | `rwlock`       | Allow multiple readers or one writer.                                                                           |
-|                      | [`Condvar`](https://docs.rs/asyncband/*/asyncband/condvar/struct.Condvar.html)                 | `condvar`      | Wait for notifications while releasing a mutex.                                                                 |
-| Coordination         | [`Semaphore`](https://docs.rs/asyncband/*/asyncband/semaphore/struct.Semaphore.html)           | `semaphore`    | Limit concurrent work by acquiring permits.                                                                     |
-|                      | [`Barrier`](https://docs.rs/asyncband/*/asyncband/barrier/struct.Barrier.html)                 | `barrier`      | Synchronize a fixed number of participants at a reusable rendezvous.                                            |
-|                      | [`ManualResetEvent`](https://docs.rs/asyncband/*/asyncband/event/struct.ManualResetEvent.html) | `event`        | Signal current and future waits until explicitly reset.                                                         |
-|                      | [`Latch`](https://docs.rs/asyncband/*/asyncband/latch/struct.Latch.html)                       | `latch`        | Wait until a fixed one-way countdown reaches zero.                                                              |
-|                      | [`WaitGroup`](https://docs.rs/asyncband/*/asyncband/waitgroup/struct.WaitGroup.html)           | `waitgroup`    | Dynamically register participants and wait until all have completed.                                            |
-|                      | [`Shutdown`](https://docs.rs/asyncband/*/asyncband/shutdown/struct.Shutdown.html)              | `shutdown`     | Request shutdown and wait until all completion guards are dropped.                                              |
-| Work coalescing      | [`Once`](https://docs.rs/asyncband/*/asyncband/once/struct.Once.html)                          | `once`         | Complete one asynchronous initialization; cancelled or panicked attempts may be retried.                        |
-|                      | [`OnceCell`](https://docs.rs/asyncband/*/asyncband/once/struct.OnceCell.html)                  | `once-cell`    | Store one value from an access-time initializer; failed, cancelled, or panicked attempts may be retried.        |
-|                      | [`LazyCell`](https://docs.rs/asyncband/*/asyncband/once/struct.LazyCell.html)                  | `lazy-cell`    | Initialize one value with a stored function and resume the same in-flight future after caller cancellation.     |
-|                      | [`OnceMap`](https://docs.rs/asyncband/*/asyncband/once/struct.OnceMap.html)                    | `once-map`     | Coalesce work per key and retain each successful value until explicitly removed.                                |
-|                      | [`Group`](https://docs.rs/asyncband/*/asyncband/singleflight/struct.Group.html)                | `singleflight` | Coalesce overlapping work per key without retaining completed values.                                           |
-| Communication        | [`Completion`](https://docs.rs/asyncband/*/asyncband/completion/struct.Completion.html)        | `completion`   | Publish one shared result to any number of current and future observers.                                        |
-|                      | [`oneshot`](https://docs.rs/asyncband/*/asyncband/oneshot/)                                    | `oneshot`      | Send one value from one sender to one receiver.                                                                 |
-|                      | [`mpsc`](https://docs.rs/asyncband/*/asyncband/mpsc/)                                          | `mpsc`         | Send each value from multiple producers to one receiver with bounded backpressure or an unbounded queue.        |
-|                      | [`broadcast`](https://docs.rs/asyncband/*/asyncband/broadcast/)                                | `broadcast`    | Deliver every value to receivers active at send time; retain an unbounded backlog until each consumes or drops. |
-|                      | [`watch`](https://docs.rs/asyncband/*/asyncband/watch/)                                        | `watch`        | Publish cloneable latest state from one or more senders; receivers independently coalesce intermediate updates. |
-| Object reuse         | [`pool`](https://docs.rs/asyncband/*/asyncband/pool/)                                          | `pool`         | Reuse objects through bounded or unbounded pool variants.                                                       |
-| Sync interop         | [`FutureExt`](https://docs.rs/asyncband/*/asyncband/blocking/trait.FutureExt.html)             | `blocking`     | Drive one runtime-agnostic future from a blocking thread.                                                       |
 
 ## Synchronous interoperability
 
@@ -83,9 +70,11 @@ Async and synchronous synchronization primitives have different optimization con
 
 A sync-first implementation can exploit OS- or platform-specific facilities that an async implementation cannot assume. Libraries focused on synchronous code can therefore make different and sometimes better tradeoffs. Asyncband leaves those optimizations to dedicated libraries rather than treating blocking adaptation as a second family of primitives.
 
-### Execution constraints
+:::info Execution constraints
 
 The `blocking` module is a lightweight, thread-parking single-future executor, not a general-purpose async runtime. `wait_timeout` drops the future on timeout. Futures that depend on a runtime-specific timer or I/O driver still need that runtime's driver to make progress, and blocking an executor thread can cause starvation or deadlocks. See the [`blocking` module documentation](https://docs.rs/asyncband/*/asyncband/blocking/) for the full contract.
+
+:::
 
 ## Thread safety
 
