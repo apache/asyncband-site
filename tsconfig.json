@@ -1,11 +1,6 @@
 {
 	"extends": "@docusaurus/tsconfig",
 	"compilerOptions": {
-		// Docusaurus 3 sets baseUrl, which TypeScript 7 no longer supports.
-		"baseUrl": null,
-		"paths": {
-			"@site/*": ["./*"]
-		},
 		"types": ["node", "@docusaurus/module-type-aliases"]
 	},
 	"exclude": ["node_modules", "build"]
