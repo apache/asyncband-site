@@ -33,11 +33,12 @@ export default function BlogListPage(props: Props): ReactNode {
 						<a
 							className={styles.rssLink}
 							href={withBaseUrl('/blog/rss.xml')}
-							aria-label="Subscribe via RSS"
+							title="RSS feed"
+							aria-label="RSS feed"
 						>
 							<svg
-								width="14"
-								height="14"
+								width="16"
+								height="16"
 								viewBox="0 0 24 24"
 								fill="none"
 								stroke="currentColor"
@@ -50,7 +51,6 @@ export default function BlogListPage(props: Props): ReactNode {
 								<path d="M4 4a16 16 0 0 1 16 16" />
 								<circle cx="5" cy="19" r="1" fill="currentColor" />
 							</svg>
-							<span>RSS</span>
 						</a>
 					</header>
 
