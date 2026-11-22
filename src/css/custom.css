@@ -399,10 +399,6 @@ pre[class*='language-'] {
 }
 
 /* ---- 7. Blog & Markdown pages -------------------------------------------- */
-.blog-post-page main.col--9 {
-	max-width: 780px;
-}
-
 .blog-post-page article > header {
 	padding-bottom: var(--ab-space-5);
 	margin-bottom: var(--ab-space-5);

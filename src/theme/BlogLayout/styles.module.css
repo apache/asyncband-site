@@ -1,0 +1,29 @@
+.blogContainer {
+	width: 100%;
+	max-width: 48rem;
+	margin-inline: auto;
+	padding: var(--ab-space-6) var(--ab-gutter) var(--ab-space-8);
+}
+
+.blogMain {
+	min-width: 0;
+}
+
+.postBodyWrap {
+	position: relative;
+}
+
+.postTocRail {
+	display: none;
+}
+
+@media (min-width: 1280px) {
+	.postTocRail {
+		display: block;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: calc(100% + 2.5rem);
+		width: clamp(196px, calc((100vw - 48rem) / 2 - 3.75rem), 248px);
+	}
+}
