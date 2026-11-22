@@ -184,7 +184,7 @@ a.authorChip:hover {
 
 @media (max-width: 768px) {
 	.postRow {
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 1fr);
 		gap: var(--ab-space-2);
 		padding-block: var(--ab-space-5);
 	}

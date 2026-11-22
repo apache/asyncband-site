@@ -337,6 +337,10 @@ pre[class*='language-'] {
 	-webkit-backdrop-filter: none;
 }
 
+.navbar-sidebar {
+	background-color: var(--ab-bg);
+}
+
 .navbar__logo {
 	height: 1.65rem;
 	margin-right: 0.5rem;

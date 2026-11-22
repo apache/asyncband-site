@@ -120,6 +120,10 @@
 	align-items: center;
 }
 
+.heroInner > * {
+	min-width: 0;
+}
+
 .heroTitle {
 	font-size: var(--ab-text-display);
 	line-height: var(--ab-leading-tight);
@@ -870,11 +874,11 @@
 @media (max-width: 996px) {
 	.heroInner,
 	.capabilityExplorer {
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 1fr);
 	}
 
 	.showcaseCard {
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 1fr);
 		align-items: flex-start;
 		gap: var(--ab-space-3);
 	}
@@ -890,14 +894,15 @@
 
 	.capabilityPreview {
 		position: static;
+		min-width: 0;
 	}
 
 	.primitiveGrid {
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
 	.contractsGrid {
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 1fr);
 	}
 }
 
@@ -905,11 +910,11 @@
 	.valueGrid,
 	.primitiveGrid,
 	.guideGrid {
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 1fr);
 	}
 
 	.heroStats {
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: var(--ab-space-5) var(--ab-space-4);
 	}
 
