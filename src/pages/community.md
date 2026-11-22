@@ -6,7 +6,7 @@ hide_table_of_contents: true
 
 # Community
 
-Apache Asyncband (Incubating) is an effort undergoing incubation at the [Apache Software Foundation](https://www.apache.org/), sponsored by the [Apache Incubator PMC](https://incubator.apache.org/). Project governance, release votes, and design decisions happen in the open following the [Apache Way](https://www.apache.org/theapacheway/).
+Apache Asyncband (Incubating) is an effort undergoing incubation at the [Apache Software Foundation](https://www.apache.org/), sponsored by the [Apache Incubator PMC](https://incubator.apache.org/). Project governance, release votes, and design decisions happen in the open following the [Apache Way](https://www.apache.org/theapacheway/). For a point-in-time evaluation against the Apache Project Maturity Model, see the [Community Report & Maturity Assessment](/community/maturity/).
 
 ## Mailing lists
 
