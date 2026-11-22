@@ -35,10 +35,20 @@ export interface CapabilityTheme {
 	code: string;
 }
 
+export interface ShowcasePrimitive {
+	label: string;
+	href: string;
+}
+
 export interface AdoptionEntry {
 	name: string;
+	category: string;
 	href: string;
+	logoLight: string;
+	logoDark: string;
+	logoHeight: number;
 	claim: string;
+	primitives: ShowcasePrimitive[];
 }
 
 export interface EngineeringGuide {
@@ -358,26 +368,80 @@ assert_eq!(receiver.block_on(), Ok(42));`
 export const adoption: AdoptionEntry[] = [
 	{
 		name: 'ScopeDB',
+		category: 'Cloud database',
 		href: 'https://www.scopedb.io/',
+		logoLight: '/img/showcase/scopedb-light.svg',
+		logoDark: '/img/showcase/scopedb-dark.svg',
+		logoHeight: 22,
 		claim:
-			'coordinates query and ingestion admission budgets with Semaphore, pools backend connections with pool, and drains active workloads gracefully with WaitGroup and Shutdown.'
+			'Coordinates query and ingestion admission budgets, pools backend connections, and drains active workloads gracefully during node shutdown.',
+		primitives: [
+			{
+				label: 'Semaphore',
+				href: 'https://docs.rs/asyncband/*/asyncband/semaphore/struct.Semaphore.html'
+			},
+			{ label: 'pool', href: 'https://docs.rs/asyncband/*/asyncband/pool/' },
+			{
+				label: 'WaitGroup',
+				href: 'https://docs.rs/asyncband/*/asyncband/waitgroup/struct.WaitGroup.html'
+			},
+			{
+				label: 'Shutdown',
+				href: 'https://docs.rs/asyncband/*/asyncband/shutdown/struct.Shutdown.html'
+			}
+		]
 	},
 	{
 		name: 'Apache OpenDAL',
+		category: 'Data access layer',
 		href: 'https://opendal.apache.org/',
+		logoLight: '/img/showcase/opendal-light.svg',
+		logoDark: '/img/showcase/opendal-dark.svg',
+		logoHeight: 28,
 		claim:
-			'shares Semaphore concurrency budgets across storage operators and coalesces concurrent directory creation with singleflight::Group.'
+			'Shares concurrency budgets across storage operators and coalesces concurrent remote directory creation without coupling backends to one executor.',
+		primitives: [
+			{
+				label: 'Semaphore',
+				href: 'https://docs.rs/asyncband/*/asyncband/semaphore/struct.Semaphore.html'
+			},
+			{
+				label: 'singleflight::Group',
+				href: 'https://docs.rs/asyncband/*/asyncband/singleflight/struct.Group.html'
+			}
+		]
 	},
 	{
 		name: 'Apache Reqsign',
+		category: 'Request signing',
 		href: 'https://reqsign.apache.org/',
+		logoLight: '/img/showcase/reqsign-light.svg',
+		logoDark: '/img/showcase/reqsign-dark.svg',
+		logoHeight: 24,
 		claim:
-			'deduplicates overlapping cloud credential refreshes with singleflight::Group without coupling signing crates to a specific runtime.'
+			'Deduplicates overlapping cloud credential and delegation-key refreshes across concurrent HTTP signing callers while keeping signing crates runtime-neutral.',
+		primitives: [
+			{
+				label: 'singleflight::Group',
+				href: 'https://docs.rs/asyncband/*/asyncband/singleflight/struct.Group.html'
+			}
+		]
 	},
 	{
 		name: 'prek',
+		category: 'Git hook runner',
 		href: 'https://github.com/j178/prek',
-		claim: 'passes shared Semaphore permits across project runs to bound concurrent hook execution.'
+		logoLight: '/img/showcase/prek-light.png',
+		logoDark: '/img/showcase/prek-dark.png',
+		logoHeight: 30,
+		claim:
+			'Passes shared concurrency permits across workspace project runs to bound parallel hook execution against local CPU and I/O capacity.',
+		primitives: [
+			{
+				label: 'Semaphore',
+				href: 'https://docs.rs/asyncband/*/asyncband/semaphore/struct.Semaphore.html'
+			}
+		]
 	}
 ];
 

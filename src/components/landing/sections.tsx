@@ -1,6 +1,8 @@
 import Link from '@docusaurus/Link';
+import { useBaseUrlUtils } from '@docusaurus/useBaseUrl';
 import CodeBlock from '@theme/CodeBlock';
 import Heading from '@theme/Heading';
+import ThemedImage from '@theme/ThemedImage';
 import { useState, type ReactNode } from 'react';
 import CodeTabs from './CodeTabs';
 import {
@@ -66,20 +68,41 @@ export function Hero(): ReactNode {
 }
 
 export function Adoption(): ReactNode {
+	const { withBaseUrl } = useBaseUrlUtils();
 	return (
 		<section className={`${styles.section} ${styles.sectionSubtle}`}>
 			<div className="ab-container">
 				<div className={styles.adoptionHeader}>
-					<span className="ab-eyebrow">Proven in production</span>
+					<span className="ab-eyebrow">Use case showcase</span>
 				</div>
-				<div className={styles.adoptionList}>
+				<div className={styles.showcaseStack}>
 					{adoption.map((entry) => (
-						<p className={styles.adoptionClaim} key={entry.name}>
-							<Link to={entry.href} className={styles.adoptionName}>
-								{entry.name}
-							</Link>{' '}
-							{entry.claim}
-						</p>
+						<article className={styles.showcaseCard} key={entry.name}>
+							<Link
+								to={entry.href}
+								className={styles.showcaseBrand}
+								aria-label={`${entry.name} website`}
+							>
+								<ThemedImage
+									alt={entry.name}
+									sources={{
+										light: withBaseUrl(entry.logoLight),
+										dark: withBaseUrl(entry.logoDark)
+									}}
+									className={styles.showcaseLogo}
+									style={{ height: `${entry.logoHeight}px` }}
+								/>
+								<span className={styles.showcaseCategory}>{entry.category}</span>
+							</Link>
+							<p className={styles.showcaseClaim}>{entry.claim}</p>
+							<div className={styles.showcasePills}>
+								{entry.primitives.map((primitive) => (
+									<Link key={primitive.label} to={primitive.href} className={styles.showcasePill}>
+										{primitive.label}
+									</Link>
+								))}
+							</div>
+						</article>
 					))}
 				</div>
 			</div>

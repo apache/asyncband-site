@@ -317,27 +317,96 @@
 	overflow-wrap: inherit;
 }
 
-/* ===== Adoption strip ==================================================== */
+/* ===== Use case showcase ================================================= */
 .adoptionHeader {
 	margin-bottom: var(--ab-space-5);
 }
 
-.adoptionList {
-	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: var(--ab-space-4) clamp(2rem, 1rem + 3vw, 3.5rem);
+.showcaseStack {
+	display: flex;
+	flex-direction: column;
+	gap: var(--ab-space-3);
 }
 
-.adoptionClaim {
-	font-size: var(--ab-text-base);
+.showcaseCard {
+	display: grid;
+	grid-template-columns: 184px minmax(0, 1fr) auto;
+	align-items: center;
+	gap: var(--ab-space-5);
+	padding: var(--ab-space-4) var(--ab-space-5);
+	background: var(--ab-surface);
+	border: 1px solid var(--ab-border);
+	border-radius: var(--ab-radius-lg);
+	transition: border-color var(--ab-dur) var(--ab-ease);
+}
+
+.showcaseCard:hover {
+	border-color: var(--ab-border-strong);
+}
+
+.showcaseBrand {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+	padding-right: var(--ab-space-4);
+	border-right: 1px solid var(--ab-border);
+	text-decoration: none;
+}
+
+.showcaseBrand:hover {
+	text-decoration: none;
+	opacity: 0.82;
+}
+
+.showcaseLogo {
+	width: auto;
+	max-width: 148px;
+	object-fit: contain;
+	display: block;
+}
+
+.showcaseCategory {
+	font-family: var(--ab-font-mono);
+	font-size: var(--ab-text-2xs);
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--ab-fg-subtle);
+}
+
+.showcaseClaim {
+	margin: 0;
+	font-size: var(--ab-text-sm);
 	line-height: var(--ab-leading-normal);
 	color: var(--ab-fg-muted);
-	margin: 0;
 }
 
-.adoptionName {
-	font-weight: 650;
-	color: var(--ab-fg-strong);
+.showcasePills {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: var(--ab-space-2);
+}
+
+.showcasePill {
+	padding: 0.2rem 0.55rem;
+	border: 1px solid var(--ab-border);
+	border-radius: var(--ab-radius-sm);
+	background: var(--ab-surface-2);
+	font-family: var(--ab-font-mono);
+	font-size: var(--ab-text-xs);
+	color: var(--ab-fg);
+	text-decoration: none;
+	white-space: nowrap;
+	transition:
+		color var(--ab-dur) var(--ab-ease),
+		border-color var(--ab-dur) var(--ab-ease);
+}
+
+.showcasePill:hover {
+	color: var(--ab-accent);
+	border-color: var(--ab-accent-border);
+	text-decoration: none;
 }
 
 /* ===== Value props ======================================================= */
@@ -800,9 +869,23 @@
 /* ===== Responsive ======================================================== */
 @media (max-width: 996px) {
 	.heroInner,
-	.adoptionList,
 	.capabilityExplorer {
 		grid-template-columns: 1fr;
+	}
+
+	.showcaseCard {
+		grid-template-columns: 1fr;
+		align-items: flex-start;
+		gap: var(--ab-space-3);
+	}
+
+	.showcaseBrand {
+		padding-right: 0;
+		border-right: 0;
+	}
+
+	.showcasePills {
+		justify-content: flex-start;
 	}
 
 	.capabilityPreview {
