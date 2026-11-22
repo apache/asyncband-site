@@ -61,15 +61,6 @@ export const DOCS_URL = 'https://docs.rs/asyncband/';
 export const CRATES_URL = 'https://crates.io/crates/asyncband';
 export const MIGRATE_URL = 'https://github.com/apache/asyncband/blob/main/MIGRATE.md';
 
-export const supportedRuntimes = [
-	'Tokio',
-	'smol',
-	'futures::executor',
-	'async-std',
-	'custom Waker executors',
-	'blocking::FutureExt'
-];
-
 export const primitiveGroups: PrimitiveGroup[] = [
 	{
 		id: 'locks',
@@ -366,6 +357,12 @@ assert_eq!(receiver.block_on(), Ok(42));`
 
 export const adoption: AdoptionEntry[] = [
 	{
+		name: 'ScopeDB',
+		href: 'https://www.scopedb.io/',
+		claim:
+			'coordinates query and ingestion admission budgets with Semaphore, pools backend connections with pool, and drains active workloads gracefully with WaitGroup and Shutdown.'
+	},
+	{
 		name: 'Apache OpenDAL',
 		href: 'https://opendal.apache.org/',
 		claim:
@@ -375,7 +372,7 @@ export const adoption: AdoptionEntry[] = [
 		name: 'Apache Reqsign',
 		href: 'https://reqsign.apache.org/',
 		claim:
-			'deduplicates overlapping cloud credential refreshes with singleflight::Group while remaining executor-independent.'
+			'deduplicates overlapping cloud credential refreshes with singleflight::Group without coupling signing crates to a specific runtime.'
 	},
 	{
 		name: 'prek',
@@ -388,7 +385,7 @@ export const valueProps: ValueProp[] = [
 	{
 		index: '01',
 		title: 'Executor-independent by construction',
-		body: 'Built strictly on standard Rust futures and wakers. Asyncband never spawns tasks, owns worker threads, installs timers, or requires an I/O reactor.'
+		body: 'Built strictly on core::future::Future and core::task::Waker. Works seamlessly on Tokio as well as custom schedulers or embedded executors, without spawning tasks, owning threads, or installing timers.'
 	},
 	{
 		index: '02',

@@ -317,18 +317,15 @@
 	overflow-wrap: inherit;
 }
 
-/* ===== Adoption & Runtime strip ========================================== */
-.adoptionGrid {
-	display: grid;
-	grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-	gap: clamp(2rem, 1rem + 3vw, 3.5rem);
-	align-items: start;
+/* ===== Adoption strip ==================================================== */
+.adoptionHeader {
+	margin-bottom: var(--ab-space-5);
 }
 
-.adoptionStrip {
-	display: flex;
-	flex-direction: column;
-	gap: var(--ab-space-3);
+.adoptionList {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--ab-space-4) clamp(2rem, 1rem + 3vw, 3.5rem);
 }
 
 .adoptionClaim {
@@ -341,48 +338,6 @@
 .adoptionName {
 	font-weight: 650;
 	color: var(--ab-fg-strong);
-}
-
-.runtimePanel {
-	background: var(--ab-surface);
-	border: 1px solid var(--ab-border);
-	border-radius: var(--ab-radius-lg);
-	padding: var(--ab-space-5);
-	display: flex;
-	flex-direction: column;
-	gap: var(--ab-space-3);
-}
-
-.runtimeHeading {
-	font-family: var(--ab-font-mono);
-	font-size: var(--ab-text-xs);
-	font-weight: 600;
-	letter-spacing: var(--ab-tracking-label);
-	text-transform: uppercase;
-	color: var(--ab-fg-strong);
-}
-
-.runtimeChips {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--ab-space-2);
-}
-
-.runtimeChip {
-	padding: 0.25rem 0.65rem;
-	border: 1px solid var(--ab-border);
-	border-radius: var(--ab-radius-pill);
-	background: var(--ab-surface-2);
-	font-family: var(--ab-font-mono);
-	font-size: var(--ab-text-xs);
-	color: var(--ab-fg);
-}
-
-.runtimeNote {
-	margin: 0;
-	font-size: var(--ab-text-xs);
-	line-height: var(--ab-leading-normal);
-	color: var(--ab-fg-subtle);
 }
 
 /* ===== Value props ======================================================= */
@@ -596,12 +551,8 @@
 
 .primitiveGrid {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 1px;
-	background: var(--ab-border);
-	border: 1px solid var(--ab-border);
-	border-radius: var(--ab-radius-lg);
-	overflow: hidden;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: var(--ab-space-3);
 }
 
 .primitiveCard {
@@ -610,12 +561,17 @@
 	gap: var(--ab-space-2);
 	padding: var(--ab-space-4) var(--ab-space-5);
 	background: var(--ab-surface);
+	border: 1px solid var(--ab-border);
+	border-radius: var(--ab-radius-md);
 	text-decoration: none;
-	transition: background-color var(--ab-dur) var(--ab-ease);
+	transition:
+		background-color var(--ab-dur) var(--ab-ease),
+		border-color var(--ab-dur) var(--ab-ease);
 }
 
 .primitiveCard:hover {
 	background: var(--ab-surface-2);
+	border-color: var(--ab-border-strong);
 	text-decoration: none;
 }
 
@@ -844,7 +800,7 @@
 /* ===== Responsive ======================================================== */
 @media (max-width: 996px) {
 	.heroInner,
-	.adoptionGrid,
+	.adoptionList,
 	.capabilityExplorer {
 		grid-template-columns: 1fr;
 	}

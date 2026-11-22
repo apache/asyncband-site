@@ -70,11 +70,10 @@ const config: Config = {
 				height: 28
 			},
 			items: [
-				{ to: '/#primitives', label: 'Primitives', position: 'left' },
-				{ href: 'https://docs.rs/asyncband/', label: 'API Docs', position: 'left' },
-				{ to: '/blog', label: 'Blog', position: 'left' },
 				{ to: '/downloads', label: 'Downloads', position: 'left' },
+				{ to: '/blog', label: 'Blog', position: 'left' },
 				{ to: '/community', label: 'Community', position: 'left' },
+				{ href: 'https://docs.rs/asyncband/', label: 'API Docs', position: 'right' },
 				{ type: 'dropdown', label: 'ASF', position: 'right', items: asfLinks },
 				{
 					href: 'https://github.com/apache/asyncband',
@@ -96,10 +95,10 @@ const config: Config = {
 				{
 					title: 'Documentation',
 					items: [
-						{ label: 'Primitives', to: '/#primitives' },
-						{ label: 'API Docs', href: 'https://docs.rs/asyncband/' },
+						{ label: 'About', to: '/' },
 						{ label: 'Downloads', to: '/downloads' },
-						{ label: 'Blog', to: '/blog' }
+						{ label: 'Blog', to: '/blog' },
+						{ label: 'API Docs', href: 'https://docs.rs/asyncband/' }
 					]
 				},
 				{

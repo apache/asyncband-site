@@ -13,7 +13,6 @@ import {
 	engineeringGuides,
 	heroStats,
 	primitiveGroups,
-	supportedRuntimes,
 	technicalContracts,
 	valueProps
 } from './data';
@@ -70,33 +69,18 @@ export function Adoption(): ReactNode {
 	return (
 		<section className={`${styles.section} ${styles.sectionSubtle}`}>
 			<div className="ab-container">
-				<div className={styles.adoptionGrid}>
-					<div className={styles.adoptionStrip}>
-						<span className="ab-eyebrow">Proven in production</span>
-						{adoption.map((entry) => (
-							<p className={styles.adoptionClaim} key={entry.name}>
-								<Link to={entry.href} className={styles.adoptionName}>
-									{entry.name}
-								</Link>{' '}
-								{entry.claim}
-							</p>
-						))}
-					</div>
-					<div className={styles.runtimePanel}>
-						<span className={styles.runtimeHeading}>Polls on any standards-based executor</span>
-						<div className={styles.runtimeChips}>
-							{supportedRuntimes.map((runtime) => (
-								<span className={styles.runtimeChip} key={runtime}>
-									{runtime}
-								</span>
-							))}
-						</div>
-						<p className={styles.runtimeNote}>
-							Asyncband depends only on <code>core::future::Future</code> and{' '}
-							<code>core::task::Waker</code>. Wrap any wait in your executor&apos;s own deadline or
-							cancellation combinator.
+				<div className={styles.adoptionHeader}>
+					<span className="ab-eyebrow">Proven in production</span>
+				</div>
+				<div className={styles.adoptionList}>
+					{adoption.map((entry) => (
+						<p className={styles.adoptionClaim} key={entry.name}>
+							<Link to={entry.href} className={styles.adoptionName}>
+								{entry.name}
+							</Link>{' '}
+							{entry.claim}
 						</p>
-					</div>
+					))}
 				</div>
 			</div>
 		</section>

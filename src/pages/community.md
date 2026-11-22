@@ -19,11 +19,11 @@ Mailing lists are the primary record for project decisions and release votes:
 
 To unsubscribe from either list, send an email to `dev-unsubscribe@asyncband.apache.org` or `commits-unsubscribe@asyncband.apache.org`.
 
-## GitHub repositories
+## GitHub
 
-* [`apache/asyncband`](https://github.com/apache/asyncband): Core Rust crate, runnable [`examples`](https://github.com/apache/asyncband/tree/main/examples), and [`benchmarks`](https://github.com/apache/asyncband/tree/main/benchmarks).
 * [GitHub Issues](https://github.com/apache/asyncband/issues): Bug reports and concrete feature requests.
 * [GitHub Discussions](https://github.com/apache/asyncband/discussions): Usage questions, concurrency trade-off discussions, and early design ideas.
+* [`apache/asyncband`](https://github.com/apache/asyncband): Core Rust crate, runnable [`examples`](https://github.com/apache/asyncband/tree/main/examples), and [`benchmarks`](https://github.com/apache/asyncband/tree/main/benchmarks).
 * [`apache/asyncband-site`](https://github.com/apache/asyncband-site): Source repository for this website and engineering blog.
 
 ## Contributing

@@ -376,16 +376,6 @@ pre[class*='language-'] {
 	}
 }
 
-/* Prevent in-page anchor link from appearing permanently active on / */
-.navbar__link[href$='#primitives'] {
-	color: var(--ab-fg-muted);
-	font-weight: var(--ifm-font-weight-normal);
-}
-
-.navbar__link[href$='#primitives']:hover {
-	color: var(--ab-fg-strong);
-}
-
 .header-github-link {
 	display: flex;
 	align-items: center;
