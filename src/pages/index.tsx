@@ -12,7 +12,7 @@ import {
 
 export default function Home(): ReactNode {
 	return (
-		<Layout description="Apache Asyncband (Incubating) is a runtime-agnostic library providing composable synchronization, work coalescing, channels, and object pools for asynchronous Rust.">
+		<Layout description="Apache Asyncband (Incubating) provides runtime-agnostic concurrency primitives built on standard Rust futures, without pulling an executor into your dependency tree.">
 			<Hero />
 			<main>
 				<Adoption />

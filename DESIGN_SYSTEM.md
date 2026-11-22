@@ -1,6 +1,6 @@
 # Asyncband Design System
 
-> **Coordinate tasks. Keep your runtime.** An engineering-grade visual language for Apache Asyncband (Incubating), sharing its structural skeleton with Apache OpenDAL and Apache Reqsign while carrying Asyncband's own identity.
+> **Sync. Signal. Coordinate.** An engineering-grade visual language for Apache Asyncband (Incubating), sharing its structural skeleton with Apache OpenDAL and Apache Reqsign while carrying Asyncband's own identity.
 
 This document defines the visual system for `asyncband-site`. The landing page (`src/pages/index.tsx`) applies the full component vocabulary, while `/downloads`, `/community`, and `/blog` inherit the same tokens through Infima variable projection.
 

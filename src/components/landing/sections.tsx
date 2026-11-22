@@ -7,7 +7,6 @@ import { useState, type ReactNode } from 'react';
 import CodeTabs from './CodeTabs';
 import {
 	DOCS_URL,
-	REPO_URL,
 	adoption,
 	allPrimitives,
 	capabilityThemes,
@@ -29,14 +28,13 @@ export function Hero(): ReactNode {
 					<div>
 						<span className="ab-eyebrow">Apache Asyncband (Incubating) · Async Rust</span>
 						<h1 className={styles.heroTitle}>
-							Coordinate tasks.
+							Sync. Signal.
 							<br />
-							<span className={styles.heroTitleAccent}>Keep your runtime.</span>
+							<span className={styles.heroTitleAccent}>Coordinate.</span>
 						</h1>
 						<p className={styles.heroLede}>
-							Composable synchronization, work coalescing, channels, and object pools built on
-							standard Rust futures and wakers, without spawning tasks, owning threads, or choosing
-							an executor for your application.
+							Runtime-agnostic concurrency primitives built on standard Rust futures, without
+							pulling an executor into your dependency tree.
 						</p>
 						<div className={styles.heroActions}>
 							<a className={`${styles.btn} ${styles.btnPrimary}`} href="#primitives">
@@ -44,9 +42,6 @@ export function Hero(): ReactNode {
 							</a>
 							<Link className={`${styles.btn} ${styles.btnSecondary}`} to={DOCS_URL}>
 								API Docs ↗
-							</Link>
-							<Link className={`${styles.btn} ${styles.btnSecondary}`} to={REPO_URL}>
-								View on GitHub
 							</Link>
 						</div>
 						<div className={styles.heroStats}>
