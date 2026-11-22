@@ -399,93 +399,41 @@ pre[class*='language-'] {
 }
 
 /* ---- 7. Blog & Markdown pages -------------------------------------------- */
-/* Hide the redundant Recent-posts sidebar while keeping the post TOC */
-.blog-list-page aside.col--3,
-.blog-post-page aside.col--3 {
-	display: none;
-}
-
-.blog-list-page main.col--7 {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-	gap: var(--ab-space-5);
-	flex: 1 1 0%;
-	max-width: 100%;
-}
-
-.blog-list-page main.col--7 > nav.pagination-nav {
-	grid-column: 1 / -1;
-}
-
-.blog-list-page article.margin-bottom--xl {
-	display: flex;
-	flex-direction: column;
-	margin: 0 !important;
-	padding: var(--ab-space-5);
-	background: var(--ab-surface);
-	border: 1px solid var(--ab-border);
-	border-radius: var(--ab-radius-lg);
-	transition:
-		border-color var(--ab-dur) var(--ab-ease),
-		background-color var(--ab-dur) var(--ab-ease);
-}
-
-.blog-list-page article.margin-bottom--xl:hover {
-	border-color: var(--ab-border-strong);
-	background: var(--ab-surface-2);
-}
-
-.blog-list-page article.margin-bottom--xl h2 {
-	font-size: var(--ab-text-lg);
-	line-height: var(--ab-leading-snug);
-}
-
-.blog-list-page article.margin-bottom--xl h2 a {
-	color: var(--ab-fg-strong);
-}
-
-.blog-list-page article.margin-bottom--xl h2 a:hover {
-	color: var(--ab-accent);
-	text-decoration: none;
-}
-
-.blog-list-page article.margin-bottom--xl .markdown {
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 6;
-	overflow: hidden;
-	color: var(--ab-fg-muted);
-	font-size: var(--ab-text-sm);
-}
-
-.blog-list-page .avatar__intro > :nth-child(2) {
-	display: none;
-}
-
-.blog-list-page article.margin-bottom--xl footer {
-	margin-top: auto;
-	padding-top: var(--ab-space-3);
-	align-items: center;
-}
-
-.blog-list-page article.margin-bottom--xl footer .col--3,
-.blog-list-page article.margin-bottom--xl footer a[aria-label^='Read more'] {
-	flex: 0 0 auto;
-	width: auto;
-	max-width: none;
-	margin-left: auto;
-	white-space: nowrap;
-}
-
-.blog-list-page article.margin-bottom--xl footer .col--9 {
-	flex: 1 1 auto;
-	width: auto;
-	max-width: none;
-}
-
-.blog-post-page main.col--7 {
-	flex: 1 1 0%;
+.blog-post-page main.col--9 {
 	max-width: 780px;
+}
+
+.blog-post-page article > header {
+	padding-bottom: var(--ab-space-5);
+	margin-bottom: var(--ab-space-5);
+	border-bottom: 1px solid var(--ab-border);
+}
+
+.blog-post-page article > header h1 {
+	font-size: clamp(1.85rem, 1.35rem + 2vw, 2.5rem);
+	line-height: 1.18;
+}
+
+/* Keep author avatars compact and vertically centered without empty social rows */
+.blog-wrapper .avatar {
+	align-items: center;
+	gap: 0.65rem;
+}
+
+.blog-wrapper .avatar__photo {
+	width: 2.25rem;
+	height: 2.25rem;
+	border: 1px solid var(--ab-border);
+}
+
+.blog-wrapper .avatar__intro {
+	justify-content: center;
+	gap: 1px;
+	line-height: 1.25;
+}
+
+.blog-wrapper .avatar__intro > :empty {
+	display: none;
 }
 
 .markdown :is(h1, h2, h3, h4) {

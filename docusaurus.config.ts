@@ -38,7 +38,17 @@ const config: Config = {
 		locales: ['en']
 	},
 
-	plugins: ['./plugins/blog.ts'],
+	plugins: [
+		[
+			'./plugins/blog.ts',
+			{
+				blogTitle: 'Engineering Blog',
+				blogDescription:
+					'Field guides and design notes on async coordination contracts, channel backpressure, and production Rust concurrency.',
+				blogSidebarCount: 0
+			}
+		]
+	],
 
 	presets: [
 		[
