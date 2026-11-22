@@ -40,6 +40,7 @@ Contributions of all kinds are welcome, including bug reports, benchmark cases, 
 * **Written asynchronous discussion**: Substantive architecture, API contract, roadmap, release, and governance discussions happen in writing on `dev@asyncband.apache.org` or in public GitHub issues and pull requests. Any off-list or synchronous discussion that affects the project is summarized back to `dev@asyncband.apache.org` before a decision is finalized.
 * **Consensus and voting**: Routine code and documentation changes proceed through pull request review and [lazy consensus](https://community.apache.org/committers/lazyConsensus.html). Software releases, committer and PPMC elections, and formal policy decisions follow standard [Apache voting rules](https://www.apache.org/foundation/voting.html) (`+1` / `0` / `-1`, open for at least 72 hours). Release votes require at least three binding `+1` votes and more `+1` than `-1` votes on `dev@asyncband.apache.org`, followed during incubation by approval from the Apache Incubator PMC on `general@incubator.apache.org`.
 * **Vetoes**: Per Apache voting rules, vetoes (`-1`) apply only to code modifications and must be accompanied by a clear technical explanation.
+* **Maturity assessment**: See the [Community Report & Maturity Assessment](/community/maturity/) for a point-in-time evaluation against the [Apache Project Maturity Model](https://community.apache.org/apache-way/apache-project-maturity-model.html).
 
 ## Roles and meritocracy
 
