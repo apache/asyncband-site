@@ -15,7 +15,7 @@ The local site is available at `http://localhost:3000/` by default.
 
 ## Writing documentation
 
-Pages live under `src/pages/`. The homepage is `src/pages/index.tsx`, with its prose content in `src/pages/_home-content.md`. Markdown pages start with frontmatter for their title and metadata; the rest of the file is Markdown.
+Pages live under `src/pages/`. The homepage (`src/pages/index.tsx`) composes structured landing sections and API catalog data from `src/components/landing/`, following the visual system documented in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md). Standalone Markdown pages such as `src/pages/downloads.md` and `src/pages/community.md` start with frontmatter for their title and metadata; the rest of the file is Markdown.
 
 Fenced `bash` and `rust` code blocks are highlighted during the build. Docusaurus also supports MDX components when a page needs behavior beyond Markdown.
 
@@ -27,7 +27,7 @@ Blog posts live under `blog/`, with author profiles in `blog/authors.yml`. Keep 
 
 ## Validating
 
-Run the type, formatting, lint, and production-build checks:
+Run the type, formatting, lint, production-build, and external-asset checks:
 
 ```sh
 pnpm validate
