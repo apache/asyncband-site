@@ -1,22 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
 	<style>
-		.ink-fill { fill: #0a0d11; }
-		.ink-stroke { stroke: #0a0d11; }
-		.accent { fill: #b93815; }
+		.s1 { stroke: #ec4899; }
+		.s2 { stroke: #f0a500; }
+		.s3 { stroke: #2563eb; }
+		.s4 { stroke: #e03b2b; }
 		@media (prefers-color-scheme: dark) {
-			.ink-fill { fill: #f6f8fa; }
-			.ink-stroke { stroke: #f6f8fa; }
-			.accent { fill: #ff7340; }
+			.s1 { stroke: #f472b6; }
+			.s2 { stroke: #facc15; }
+			.s3 { stroke: #5899ff; }
+			.s4 { stroke: #ff5a47; }
 		}
 	</style>
-	<circle class="ink-fill" cx="19.5" cy="24.5" r="7.4" />
 	<path
-		class="ink-stroke"
-		d="M16.1 24.5 C16.1 12.8 25.4 8.2 33.8 10.4 C42.8 12.8 45.2 25.2 38.4 37.4 C32.6 47.8 21 54.2 11.2 56.2"
+		class="s1"
+		d="M14.5 9 C 4.5 21, 24.5 43, 14.5 55"
 		fill="none"
-		stroke-width="8"
+		stroke-width="6.2"
 		stroke-linecap="round"
 	/>
-	<circle class="accent" cx="52.5" cy="19.5" r="5" />
-	<circle class="accent" cx="52.5" cy="35.5" r="5" />
+	<path
+		class="s2"
+		d="M28.5 10.5 C 22.5 21.5, 34.5 42.5, 28.5 53.5"
+		fill="none"
+		stroke-width="5.8"
+		stroke-linecap="round"
+	/>
+	<path
+		class="s3"
+		d="M41.2 15.5 C 38.2 24, 44.2 40, 41.2 48.5"
+		fill="none"
+		stroke-width="5.6"
+		stroke-linecap="round"
+	/>
+	<line
+		class="s4"
+		x1="52.5"
+		y1="22.5"
+		x2="52.5"
+		y2="41.5"
+		stroke-width="5.6"
+		stroke-linecap="round"
+	/>
 </svg>

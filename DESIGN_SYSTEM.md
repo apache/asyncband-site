@@ -19,8 +19,8 @@ The system separates structural mechanics from brand identity:
 ### Asyncband identity
 
 * **Resonant Copper** (`--ab-copper-*`): Asyncband's single accent hue, distinct from OpenDAL's precise blue and Reqsign's seal green. `--ab-copper-700` (`#b93815`) serves as the light-mode accent and primary CTA surface (5.76:1 contrast on white). In dark mode, `--ab-copper-300` (`#ff8a61`) handles text/links while primary buttons invert to `--ab-copper-400` (`#ff7340`) with dark ink text (`#0a0d11`, 6.6:1 contrast).
-* **The Bauhaus Bass Clef mark** (`static/img/logo.svg`, `static/img/logo-dark.svg`, `static/favicon.svg`): In a musical band, the bass locks independent players into time without acting as a central conductor. A continuous geometric arc paired with two Resonant Copper synchronization dots represents independent async futures coordinating in lockstep without owning an executor.
-* **Paired sync-pulse motif** (`.ab-eyebrow::before`): Echoes the two reference dots of the bass clef ahead of uppercase monospace section kickers.
+* **The Harmonic Ripple 4-String mark** (`static/img/logo.svg`, `static/img/logo-dark.svg`, `static/favicon.svg`): Four strings arranged in a pick-shaped contour propagate an initial standing wave from left to right with damped harmonic resonance across four distinct voices (`#ec4899`, `#f0a500`, `#2563eb`, `#e03b2b` on light surfaces; `#f472b6`, `#facc15`, `#5899ff`, `#ff5a47` on dark surfaces), representing a signal waking and coordinating independent async tasks in unison without owning an executor.
+* **Harmonic ripple motif** (`.ab-eyebrow::before`): Echoes the four-string wave propagation mark ahead of uppercase monospace section kickers.
 
 ## 2. Where the system lives
 
