@@ -42,9 +42,8 @@ const config: Config = {
 		[
 			'./plugins/blog.ts',
 			{
-				blogTitle: 'Engineering Blog',
-				blogDescription:
-					'Field guides and design notes on async coordination contracts, channel backpressure, and production Rust concurrency.',
+				blogTitle: 'Blog',
+				blogDescription: 'Apache Asyncband (Incubating) blog.',
 				blogSidebarCount: 0
 			}
 		]
