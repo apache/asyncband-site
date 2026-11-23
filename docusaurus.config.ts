@@ -63,7 +63,20 @@ const config: Config = {
 	],
 
 	themeConfig: {
-		image: 'og.png',
+		image: 'og-harmonic.png',
+		metadata: [
+			{ property: 'og:image:type', content: 'image/png' },
+			{ property: 'og:image:width', content: '1200' },
+			{ property: 'og:image:height', content: '630' },
+			{
+				property: 'og:image:alt',
+				content: 'Apache Asyncband (Incubating): Sync. Signal. Coordinate.'
+			},
+			{
+				name: 'twitter:image:alt',
+				content: 'Apache Asyncband (Incubating): Sync. Signal. Coordinate.'
+			}
+		],
 		colorMode: {
 			defaultMode: 'light',
 			disableSwitch: false,
