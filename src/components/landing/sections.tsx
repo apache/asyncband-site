@@ -26,15 +26,16 @@ export function Hero(): ReactNode {
 			<div className="ab-container">
 				<div className={styles.heroInner}>
 					<div>
-						<span className="ab-eyebrow">Apache Asyncband (Incubating) · Async Rust</span>
+						<span className="ab-eyebrow">Apache Asyncband™ (Incubating) · Async Rust</span>
 						<h1 className={styles.heroTitle}>
 							Sync. Signal.
 							<br />
 							<span className={styles.heroTitleAccent}>Coordinate.</span>
 						</h1>
 						<p className={styles.heroLede}>
-							Runtime-agnostic concurrency primitives built on standard Rust futures, without
-							pulling an executor into your dependency tree.
+							Apache Asyncband™ (Incubating) software provides runtime-agnostic concurrency
+							primitives built on standard Rust futures, without pulling an executor into your
+							dependency tree.
 						</p>
 						<div className={styles.heroActions}>
 							<a className={`${styles.btn} ${styles.btnPrimary}`} href="#primitives">

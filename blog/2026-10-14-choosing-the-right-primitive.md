@@ -1,13 +1,13 @@
 ---
 title: "Using Semaphores to Control In-Flight Work"
-description: "Use Asyncband's Semaphore to share concurrency limits, keep permits with the resources they account for, and reserve capacity for work of different sizes."
+description: "Use Apache Asyncband™'s Semaphore to share concurrency limits, keep permits with the resources they account for, and reserve capacity for work of different sizes."
 authors: [nanami, tison]
 tags: [semaphore]
 ---
 
 An asynchronous program can start work faster than the resources behind it can handle. Downloads compete for connections and bandwidth. Background jobs compete for CPU time. Buffered data occupies memory until its consumer finishes with it. A semaphore gives these operations a shared budget: work acquires permits before consuming capacity and returns them when that capacity becomes available again.
 
-The useful questions are **what one permit represents, which operations share the budget, and how long each operation holds its permits**. This post works through those choices with Asyncband's [`Semaphore`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html), including how Apache OpenDAL and prek use it.
+The useful questions are **what one permit represents, which operations share the budget, and how long each operation holds its permits**. This post works through those choices with Apache Asyncband™'s [`Semaphore`](https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html), including how Apache OpenDAL™ and prek use it.
 
 <!-- truncate -->
 

@@ -1,6 +1,6 @@
-# Apache Asyncband (Incubating) Website
+# Apache Asyncband™ (Incubating) Website
 
-This repository contains the source for the Apache Asyncband (Incubating) website. Read the project [DISCLAIMER](DISCLAIMER) and learn what [incubation](https://incubator.apache.org/policy/incubation.html) means.
+This repository contains the source for the Apache Asyncband™ (Incubating) website. Read the project [DISCLAIMER](DISCLAIMER) and learn what [incubation](https://incubator.apache.org/policy/incubation.html) means.
 
 ## Developing
 
@@ -50,6 +50,14 @@ To publish a staging preview, push the site source to a branch named `preview/<n
 
 Deleting `preview/<name>` removes the generated `site/<name>-staging` branch. Source branches are deleted automatically after merging a pull request. Closing a pull request without merging keeps its preview available until you delete the source branch. The staged preview may remain reachable until ASF infrastructure prunes it.
 
-## License
+## Branding
+
+The first and most prominent mentions must use the full form: **Apache Asyncband™** (and **Apache Asyncband™ (Incubating)** while undergoing incubation) for any individual usage (webpage, handout, slides, etc.). Depending on the context and writing style, you should use the full form of the name sufficiently often to ensure that readers clearly understand the association of both the Asyncband project and the Asyncband software product to the ASF as the parent organization.
+
+For more details, see the [Apache Product Name Usage Guide](https://www.apache.org/foundation/marks/guide).
+
+## License and Trademarks
 
 Licensed under the [Apache License, Version 2.0](LICENSE).
+
+Apache Asyncband, Asyncband, Apache, the Apache logo, and the Apache Asyncband project logo are either registered trademarks or trademarks of The Apache Software Foundation in the United States and/or other countries.

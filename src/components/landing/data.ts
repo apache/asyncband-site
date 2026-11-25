@@ -392,7 +392,7 @@ export const adoption: AdoptionEntry[] = [
 		]
 	},
 	{
-		name: 'Apache OpenDAL',
+		name: 'Apache OpenDAL™',
 		category: 'Data access layer',
 		href: 'https://opendal.apache.org/',
 		logoLight: '/img/showcase/opendal-light.svg',
@@ -412,7 +412,7 @@ export const adoption: AdoptionEntry[] = [
 		]
 	},
 	{
-		name: 'Apache Reqsign',
+		name: 'Apache Reqsign™',
 		category: 'Request signing',
 		href: 'https://reqsign.apache.org/',
 		logoLight: '/img/showcase/reqsign-light.svg',
@@ -625,7 +625,7 @@ export const technicalContracts: TechnicalContract[] = [
 export const engineeringGuides: EngineeringGuide[] = [
 	{
 		tag: 'Migration · tokio::sync',
-		title: 'Moving from tokio::sync to Asyncband',
+		title: 'Moving from tokio::sync to Apache Asyncband',
 		summary:
 			'How channel backpressure, semaphore permits, event notifications, and initialization contracts differ when switching primitives on Tokio.',
 		href: '/blog/2026/10/15/tokio-field-map/'

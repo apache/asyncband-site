@@ -1,12 +1,12 @@
 ---
 title: Community
-description: How Apache Asyncband (Incubating) is governed and where to ask questions, discuss designs, report issues, and contribute.
+description: How Apache Asyncband™ (Incubating) is governed and where to ask questions, discuss designs, report issues, and contribute.
 hide_table_of_contents: true
 ---
 
-# Community
+# Apache Asyncband™ (Incubating) Community
 
-Apache Asyncband (Incubating) is an effort undergoing incubation at the [Apache Software Foundation](https://www.apache.org/), sponsored by the [Apache Incubator PMC](https://incubator.apache.org/). Project governance, release votes, and design decisions happen in the open following the [Apache Way](https://www.apache.org/theapacheway/).
+Apache Asyncband™ (Incubating) is an effort undergoing incubation at the [Apache Software Foundation](https://www.apache.org/), sponsored by the [Apache Incubator PMC](https://incubator.apache.org/). Project governance, release votes, and design decisions happen in the open following the [Apache Way](https://www.apache.org/theapacheway/).
 
 ## Mailing lists
 
@@ -53,3 +53,11 @@ Apache Asyncband operates as a meritocracy in which contributors participate as 
 ## Security
 
 Do not report suspected security vulnerabilities in public GitHub issues or mailing lists. Report them privately to [security@apache.org](mailto:security@apache.org) with `Asyncband` in the subject line, following the [ASF vulnerability reporting process](https://www.apache.org/security/). See [`SECURITY-THREAT-MODEL.md`](https://github.com/apache/asyncband/blob/main/SECURITY-THREAT-MODEL.md) in the main repository for scope details.
+
+## Branding and trademarks
+
+The first and most prominent mentions of the project or software must use the full form **Apache Asyncband™** (and **Apache Asyncband™ (Incubating)** while undergoing incubation) in webpages, blog posts, slides, handouts, and package metadata. Depending on the context and writing style, use the full form sufficiently often so readers clearly understand the association of both the Asyncband project and the Asyncband software product with the Apache Software Foundation.
+
+Source code is licensed under the Apache License, Version 2.0, which does not grant rights to use the project names, logos, or icons. Third-party distributions, forks, and commercial offerings must follow the [ASF Trademark Policy](https://www.apache.org/foundation/marks/) and use distinct branding.
+
+For more details, see the [Apache Product Name Usage Guide](https://www.apache.org/foundation/marks/guide) and the [ASF Trademark FAQs](https://www.apache.org/foundation/marks/faq/).

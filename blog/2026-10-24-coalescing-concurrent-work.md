@@ -1,13 +1,13 @@
 ---
 title: "Coalescing Concurrent Work with Singleflight"
-description: "Use Asyncband's singleflight Group to let overlapping calls share one execution, handle errors and cancellation, and choose between the group and the once family by whether results are retained."
+description: "Use Apache Asyncband™'s singleflight Group to let overlapping calls share one execution, handle errors and cancellation, and choose between the group and the once family by whether results are retained."
 authors: [nanami]
 tags: [singleflight, once]
 ---
 
 Concurrent callers sometimes need the same expensive result at the same time: a short-lived credential that several requests must refresh, a remote directory that several operations need to exist, or a report that several queries want built. Running the work once per caller multiplies load on whatever produces the result, and every caller waits for its own duplicate execution.
 
-Asyncband's [`singleflight::Group`](https://docs.rs/asyncband/0.7.3/asyncband/singleflight/struct.Group.html) coalesces these calls: while work for a key is in flight, later callers for that key wait and, on success, receive a clone of the value. This post covers sharing one execution, what happens when the shared execution fails or is cancelled, and how to choose between a group and the `once` family, whose members retain completed state.
+Apache Asyncband™'s [`singleflight::Group`](https://docs.rs/asyncband/0.7.3/asyncband/singleflight/struct.Group.html) coalesces these calls: while work for a key is in flight, later callers for that key wait and, on success, receive a clone of the value. This post covers sharing one execution, what happens when the shared execution fails or is cancelled, and how to choose between a group and the `once` family, whose members retain completed state.
 
 <!-- truncate -->
 
