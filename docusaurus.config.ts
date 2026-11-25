@@ -6,6 +6,7 @@ const asfLinks = [
 	{ label: 'Foundation', href: 'https://www.apache.org/' },
 	{ label: 'Incubator', href: 'https://incubator.apache.org/' },
 	{ label: 'License', href: 'https://www.apache.org/licenses/' },
+	{ label: 'Trademarks', href: 'https://www.apache.org/foundation/marks/' },
 	{ label: 'Events', href: 'https://www.apache.org/events/current-event.html' },
 	{ label: 'Security', href: 'https://www.apache.org/security/' },
 	{ label: 'Sponsorship', href: 'https://www.apache.org/foundation/sponsorship.html' },
@@ -15,7 +16,7 @@ const asfLinks = [
 ];
 
 const config: Config = {
-	title: 'Apache Asyncband (Incubating)',
+	title: 'Apache Asyncband™ (Incubating)',
 	tagline:
 		'Runtime-agnostic synchronization and coordination tools for asynchronous Rust programming',
 	favicon: 'favicon.svg',
@@ -43,7 +44,7 @@ const config: Config = {
 			'./plugins/blog.ts',
 			{
 				blogTitle: 'Blog',
-				blogDescription: 'Apache Asyncband (Incubating) blog.',
+				blogDescription: 'Apache Asyncband™ (Incubating) blog.',
 				blogSidebarCount: 0
 			}
 		]
@@ -70,11 +71,11 @@ const config: Config = {
 			{ property: 'og:image:height', content: '630' },
 			{
 				property: 'og:image:alt',
-				content: 'Apache Asyncband (Incubating): Sync. Signal. Coordinate.'
+				content: 'Apache Asyncband™ (Incubating): Sync. Signal. Coordinate.'
 			},
 			{
 				name: 'twitter:image:alt',
-				content: 'Apache Asyncband (Incubating): Sync. Signal. Coordinate.'
+				content: 'Apache Asyncband™ (Incubating): Sync. Signal. Coordinate.'
 			}
 		],
 		colorMode: {
@@ -83,7 +84,7 @@ const config: Config = {
 			respectPrefersColorScheme: true
 		},
 		navbar: {
-			title: 'Apache Asyncband',
+			title: 'Apache Asyncband™',
 			logo: {
 				alt: 'Apache Asyncband',
 				src: 'img/logo.svg',
@@ -137,7 +138,7 @@ const config: Config = {
 				},
 				{ title: 'ASF', items: asfLinks }
 			],
-			copyright: `Apache Asyncband (Incubating) is an effort undergoing incubation at the Apache Software Foundation (ASF), sponsored by the <a href="https://incubator.apache.org/">Apache Incubator PMC</a>. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.<br/><br/>Copyright © 2025–${new Date().getFullYear()} The Apache Software Foundation. Licensed under the Apache License, Version 2.0.<br/>Apache Asyncband, Asyncband, Apache, the Apache feather logo, and the Apache Incubator project logo are either registered trademarks or trademarks of The Apache Software Foundation in the United States and/or other countries. All other marks mentioned may be trademarks or registered trademarks of their respective owners.`
+			copyright: `Apache Asyncband (Incubating) is an effort undergoing incubation at the Apache Software Foundation (ASF), sponsored by the <a href="https://incubator.apache.org/">Apache Incubator PMC</a>. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.<br/><br/>Copyright © 2025–${new Date().getFullYear()} The Apache Software Foundation. Licensed under the Apache License, Version 2.0.<br/>Apache Asyncband, Asyncband, Apache, the Apache logo, and the Apache Asyncband project logo are either registered trademarks or trademarks of The Apache Software Foundation in the United States and/or other countries. All other marks mentioned may be trademarks or registered trademarks of their respective owners.`
 		},
 		prism: {
 			theme: themes.github,

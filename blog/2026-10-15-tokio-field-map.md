@@ -1,11 +1,11 @@
 ---
-title: "Moving from tokio::sync to Asyncband"
-description: "How channel backpressure, semaphore acquisition, notifications, and initialization change when you migrate from tokio::sync to Asyncband."
+title: "Moving from tokio::sync to Apache Asyncband™"
+description: "How channel backpressure, semaphore acquisition, notifications, and initialization change when you migrate from tokio::sync to Apache Asyncband™."
 authors: [nanami, tison]
 tags: [migration, tokio]
 ---
 
-You can keep the Tokio runtime when you switch synchronization primitives. Consider what happens when a bounded broadcast channel fills: Tokio lets a slow receiver miss messages, while Asyncband can make the sender wait for that receiver.
+You can keep the Tokio runtime when you switch synchronization primitives. Consider what happens when a bounded broadcast channel fills: Tokio lets a slow receiver miss messages, while Apache Asyncband™ can make the sender wait for that receiver.
 
 <!-- truncate -->
 

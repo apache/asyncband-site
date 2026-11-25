@@ -1,14 +1,14 @@
 ---
 title: Downloads
-description: Official Apache source releases, PGP signatures, SHA-512 checksums, and crates.io convenience packages for Apache Asyncband (Incubating).
+description: Official Apache source releases, PGP signatures, SHA-512 checksums, and crates.io convenience packages for Apache Asyncband™ (Incubating).
 hide_table_of_contents: true
 ---
 
-# Downloads
+# Apache Asyncband™ (Incubating) Downloads
 
 ## Official Apache source releases
 
-The official distribution channel for Apache Asyncband (Incubating) is the source release published through the ASF distribution system. The project maintains the current release line with monotonic releases rather than backporting to older release branches.
+Apache Asyncband™ (Incubating) software provides composable, runtime-agnostic concurrency primitives for async Rust. Its official distribution channel is the source release published through the ASF distribution system. The project maintains the current release line with monotonic releases rather than backporting to older release branches.
 
 The latest official release is **0.8.0**:
 
