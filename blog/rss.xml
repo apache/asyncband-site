@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
     <channel>
-        <title>Apache Asyncband (Incubating) Blog</title>
+        <title>Apache Asyncband™ (Incubating) Blog</title>
         <link>https://asyncband.apache.org/blog/</link>
-        <description>Apache Asyncband (Incubating) Blog</description>
+        <description>Apache Asyncband™ (Incubating) Blog</description>
         <lastBuildDate>Sat, 24 Oct 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
@@ -13,9 +13,9 @@
             <link>https://asyncband.apache.org/blog/2026/10/24/coalescing-concurrent-work/</link>
             <guid>https://asyncband.apache.org/blog/2026/10/24/coalescing-concurrent-work/</guid>
             <pubDate>Sat, 24 Oct 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Use Asyncband's singleflight Group to let overlapping calls share one execution, handle errors and cancellation, and choose between the group and the once family by whether results are retained.]]></description>
+            <description><![CDATA[Use Apache Asyncband™'s singleflight Group to let overlapping calls share one execution, handle errors and cancellation, and choose between the group and the once family by whether results are retained.]]></description>
             <content:encoded><![CDATA[<p>Concurrent callers sometimes need the same expensive result at the same time: a short-lived credential that several requests must refresh, a remote directory that several operations need to exist, or a report that several queries want built. Running the work once per caller multiplies load on whatever produces the result, and every caller waits for its own duplicate execution.</p>
-<p>Asyncband's <a href="https://docs.rs/asyncband/0.7.3/asyncband/singleflight/struct.Group.html" target="_blank" rel="noopener noreferrer" class=""><code>singleflight::Group</code></a> coalesces these calls: while work for a key is in flight, later callers for that key wait and, on success, receive a clone of the value. This post covers sharing one execution, what happens when the shared execution fails or is cancelled, and how to choose between a group and the <code>once</code> family, whose members retain completed state.</p>
+<p>Apache Asyncband™'s <a href="https://docs.rs/asyncband/0.7.3/asyncband/singleflight/struct.Group.html" target="_blank" rel="noopener noreferrer" class=""><code>singleflight::Group</code></a> coalesces these calls: while work for a key is in flight, later callers for that key wait and, on success, receive a clone of the value. This post covers sharing one execution, what happens when the shared execution fails or is cancelled, and how to choose between a group and the <code>once</code> family, whose members retain completed state.</p>
 <p><em>The Asyncband APIs below are from version 0.7.3, with the <code>singleflight</code> features enabled.</em></p>
 <h2 class="anchor anchorTargetStickyNavbar_cqUw" id="share-one-execution-per-key">Share one execution per key<a href="https://asyncband.apache.org/blog/2026/10/24/coalescing-concurrent-work/#share-one-execution-per-key" class="hash-link" aria-label="Direct link to Share one execution per key" title="Direct link to Share one execution per key" translate="no">​</a></h2>
 <p>A group coalesces by key. <a href="https://docs.rs/asyncband/0.7.3/asyncband/singleflight/struct.Group.html#method.work" target="_blank" rel="noopener noreferrer" class=""><code>work</code></a> takes a key and an async function; while the function for that key is running, later calls with the same key wait for its result instead of starting their own:</p>
@@ -78,12 +78,12 @@
             <category>once</category>
         </item>
         <item>
-            <title><![CDATA[Moving from tokio::sync to Asyncband]]></title>
+            <title><![CDATA[Moving from tokio::sync to Apache Asyncband™]]></title>
             <link>https://asyncband.apache.org/blog/2026/10/15/tokio-field-map/</link>
             <guid>https://asyncband.apache.org/blog/2026/10/15/tokio-field-map/</guid>
             <pubDate>Thu, 15 Oct 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[How channel backpressure, semaphore acquisition, notifications, and initialization change when you migrate from tokio::sync to Asyncband.]]></description>
-            <content:encoded><![CDATA[<p>You can keep the Tokio runtime when you switch synchronization primitives. Consider what happens when a bounded broadcast channel fills: Tokio lets a slow receiver miss messages, while Asyncband can make the sender wait for that receiver.</p>
+            <description><![CDATA[How channel backpressure, semaphore acquisition, notifications, and initialization change when you migrate from tokio::sync to Apache Asyncband™.]]></description>
+            <content:encoded><![CDATA[<p>You can keep the Tokio runtime when you switch synchronization primitives. Consider what happens when a bounded broadcast channel fills: Tokio lets a slow receiver miss messages, while Apache Asyncband™ can make the sender wait for that receiver.</p>
 <p>The examples use Tokio 1.53.3 and Asyncband 0.7.3. Asyncband has no default features; enable the features you need in <code>Cargo.toml</code>. For example, to use Asyncband's broadcast channel:</p>
 <div class="language-toml codeBlockContainer_KzE5 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_KGcP"><pre tabindex="0" class="prism-code language-toml codeBlock_vtc6 thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_wJQ0"><div class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">dependencies.asyncband</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">version</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"=0.7.3"</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">features</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">"broadcast"</span><span class="token punctuation" style="color:#393A34">]</span><br></div></code></pre></div></div>
 <h2 class="anchor anchorTargetStickyNavbar_cqUw" id="channels">Channels<a href="https://asyncband.apache.org/blog/2026/10/15/tokio-field-map/#channels" class="hash-link" aria-label="Direct link to Channels" title="Direct link to Channels" translate="no">​</a></h2>
@@ -159,9 +159,9 @@
             <link>https://asyncband.apache.org/blog/2026/10/14/choosing-the-right-primitive/</link>
             <guid>https://asyncband.apache.org/blog/2026/10/14/choosing-the-right-primitive/</guid>
             <pubDate>Wed, 14 Oct 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Use Asyncband's Semaphore to share concurrency limits, keep permits with the resources they account for, and reserve capacity for work of different sizes.]]></description>
+            <description><![CDATA[Use Apache Asyncband™'s Semaphore to share concurrency limits, keep permits with the resources they account for, and reserve capacity for work of different sizes.]]></description>
             <content:encoded><![CDATA[<p>An asynchronous program can start work faster than the resources behind it can handle. Downloads compete for connections and bandwidth. Background jobs compete for CPU time. Buffered data occupies memory until its consumer finishes with it. A semaphore gives these operations a shared budget: work acquires permits before consuming capacity and returns them when that capacity becomes available again.</p>
-<p>The useful questions are <strong>what one permit represents, which operations share the budget, and how long each operation holds its permits</strong>. This post works through those choices with Asyncband's <a href="https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html" target="_blank" rel="noopener noreferrer" class=""><code>Semaphore</code></a>, including how Apache OpenDAL and prek use it.</p>
+<p>The useful questions are <strong>what one permit represents, which operations share the budget, and how long each operation holds its permits</strong>. This post works through those choices with Apache Asyncband™'s <a href="https://docs.rs/asyncband/0.7.3/asyncband/semaphore/struct.Semaphore.html" target="_blank" rel="noopener noreferrer" class=""><code>Semaphore</code></a>, including how Apache OpenDAL™ and prek use it.</p>
 <p><em>The Asyncband APIs below are from version 0.7.3, with the <code>semaphore</code> feature enabled. The HTTP example uses reqwest; the semaphore itself is runtime-independent.</em></p>
 <h2 class="anchor anchorTargetStickyNavbar_cqUw" id="share-a-budget-across-operations">Share a budget across operations<a href="https://asyncband.apache.org/blog/2026/10/14/choosing-the-right-primitive/#share-a-budget-across-operations" class="hash-link" aria-label="Direct link to Share a budget across operations" title="Direct link to Share a budget across operations" translate="no">​</a></h2>
 <p>Suppose a client should perform at most eight downloads at once. Create one <code>Semaphore::new(8)</code> and share it across the calls that consume that budget. Each download acquires one permit. When all eight are held, another acquisition waits asynchronously until capacity becomes available.</p>
